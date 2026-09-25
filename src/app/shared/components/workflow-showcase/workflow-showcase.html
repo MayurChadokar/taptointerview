@@ -1,17 +1,21 @@
-<section class="workflow" id="how-it-works" aria-labelledby="workflow-title">
+<section #workflowSection class="workflow" id="how-it-works" aria-labelledby="workflow-title">
+  <div #watermark class="workflow-watermark" aria-hidden="true">
+    <img src="product-watermark.svg" alt="" width="1200" height="680" loading="lazy" decoding="async">
+  </div>
   <div class="shell">
     <header class="workflow-heading">
-      <div>
+      <div appReveal [appRevealRepeat]="true">
         <span class="workflow-kicker"><i></i> THE SHORTEST PATH TO YOUR NEXT HIRE</span>
-        <h2 id="workflow-title">One link. Four moments.<br /><em>A faster interview.</em></h2>
+        <h2 id="workflow-title">@for (word of headlineWords; track $index) {<span class="workflow-word" [style.--word-index]="$index">{{ word }}</span>{{ $last ? '' : ' ' }}}<br /><em>@for (word of accentWords; track $index) {<span class="workflow-word" [style.--word-index]="headlineWords.length + $index">{{ word }}</span>{{ $last ? '' : ' ' }}}</em></h2>
       </div>
-      <p>Candidates move from interest to a live conversation while your recruiters stay focused on interviewing.</p>
+      <p appReveal [appRevealRepeat]="true"><span>Candidates move from interest to a live conversation while your recruiters stay focused on interviewing.</span></p>
     </header>
 
-    <div class="workflow-layout">
+    <div class="workflow-layout" (click)="pauseScrollSteps()" (focusin)="pauseScrollSteps()">
       <div class="workflow-steps" role="tablist" aria-label="Interview workflow">
         @for (step of steps; track step.number; let index = $index) {
           <button
+            appReveal [style.--step-index]="index"
             type="button"
             role="tab"
             [id]="'workflow-step-' + index"
@@ -23,13 +27,13 @@
             (keydown)="onStepKey($event, index)"
           >
             <span>{{ step.number }}</span>
-            <div><b>{{ step.title }}</b><small>{{ step.description }}</small>@if (activeStep() === index) { <em class="step-caption">EXPLORE THIS STEP</em> }</div>
+            <div><b>{{ step.title }}</b><small>{{ step.description }}</small><em class="step-caption" [attr.aria-hidden]="activeStep() !== index">EXPLORE THIS STEP</em></div>
             <i>&rarr;</i>
           </button>
         }
       </div>
 
-      <div class="workflow-product" role="tabpanel" id="workflow-preview" [attr.aria-labelledby]="'workflow-step-' + activeStep()">
+      <div #productPreview class="workflow-product" appReveal role="tabpanel" id="workflow-preview" [style.--active-progress]="(activeStep() + 1) / steps.length" [attr.aria-labelledby]="'workflow-step-' + activeStep()">
         <div class="product-chrome">
           <span><i></i><i></i><i></i></span>
           <b>YOUR HIRING, IN MOTION</b>
@@ -43,9 +47,11 @@
             }
           </div>
 
-          <div class="stage-panel" [class]="'stage-panel stage-' + activeStep()">
-            <div class="preview-intro"><span>0{{ activeStep() + 1 }} / THE CANDIDATE JOURNEY</span><h3>{{ previewTitles[activeStep()] }}</h3><p>{{ previewDescriptions[activeStep()] }}</p></div>
-            @switch (activeStep()) {
+          <div class="stage-stack">
+          @for (step of steps; track step.number; let stage = $index) {
+          <div [class]="'stage-panel stage-' + stage" [class.is-active]="activeStep() === stage" [attr.aria-hidden]="activeStep() !== stage" [attr.inert]="activeStep() !== stage ? '' : null">
+            <div class="preview-intro"><span>0{{ stage + 1 }} / THE CANDIDATE JOURNEY</span><h3>{{ previewTitles[stage] }}</h3><p>{{ previewDescriptions[stage] }}</p></div>
+            @switch (stage) {
               @case (0) {
                 <div class="link-preview">
                   <div class="link-identity"><span class="link-symbol"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m9 15 6-6M8 17l-1 1a4 4 0 0 1-6-6l4-4a4 4 0 0 1 6 0M16 7l1-1a4 4 0 0 1 6 6l-4 4a4 4 0 0 1-6 0" transform="translate(1 0) scale(.9)"/></svg></span><div><b>Sun Energy Insulation</b><small>Your next opportunity starts here.</small></div><em>● LIVE</em></div>
@@ -81,6 +87,8 @@
                 </div>
               }
             }
+          </div>
+          }
           </div>
         </div>
 

@@ -1,0 +1,46 @@
+:host {
+  position: fixed;
+  z-index: 80;
+  right: max(16px, env(safe-area-inset-right));
+  bottom: max(20px, env(safe-area-inset-bottom));
+}
+.scroll-controls {
+  padding: 3px;
+  border: 1px solid #344954;
+  border-radius: 28px;
+  background: #0c1b26;
+  box-shadow: 0 8px 24px #0004;
+}
+button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  color: #ff936f;
+  background: transparent;
+  cursor: pointer;
+  transition: background .25s ease, color .25s ease, opacity .25s ease;
+}
+button:disabled { opacity: .3; cursor: default; }
+button:focus-visible { outline: 2px solid #ff936f; outline-offset: 2px; }
+svg { width: 21px; height: 21px; }
+.divider { display: block; height: 1px; margin-inline: 10px; background: #344954; }
+@media (hover: hover) {
+  button:not(:disabled):hover { color: #fff; background: #e8603d; }
+}
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-controls { animation: controls-arrive .7s .8s ease-out backwards; }
+  button:not(:disabled) svg { animation: arrow-float 2.8s ease-in-out infinite; }
+  button:focus-visible svg { animation: none; }
+}
+@keyframes controls-arrive { from { opacity: 0; transform: translateY(12px); } }
+@keyframes arrow-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+:host-context([data-theme='light']) {
+  .scroll-controls { border-color: #d4dfe5; background: #fff; box-shadow: 0 8px 24px #0b1b2614; }
+  button { color: #be4526; }
+  button:not(:disabled):hover { color: #fff; }
+  .divider { background: #d4dfe5; }
+}
