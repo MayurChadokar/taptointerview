@@ -1,0 +1,37 @@
+<section class="scroll-stage" #scrollStage aria-labelledby="scroll-showcase-title">
+  <div class="ambient-grid"></div>
+
+  <div class="sticky-scene">
+    <div class="story-copy">
+      <span class="ai-kicker"><i></i> A BETTER HIRING DAY</span>
+      <h2 id="scroll-showcase-title">Your hiring day,<br /><em>moving in real time.</em></h2>
+      <p>One clear view of every qualified candidate&mdash;ready when your recruiters are.</p>
+    </div>
+
+    <div class="perspective-wrap" (pointermove)="onPointerMove($event)" (pointerleave)="resetTilt()" (pointercancel)="resetTilt()">
+      <div class="pointer-tilt" #tiltSurface>
+      <div class="product-frame">
+        <div class="frame-bar">
+          <div class="frame-lights"><i></i><i></i><i></i></div>
+          <span>app.taptointerview.com / live-queue</span>
+          <b>LIVE</b>
+        </div>
+        <div class="product-canvas"><app-product-mockup mode="waiting-room" /></div>
+        <div class="frame-edge"></div>
+      </div>
+
+      <div class="signal signal-qualified"><i>&#10003;</i><span><small>CANDIDATE STATUS</small><b>Qualified &amp; ready</b></span></div>
+      <div class="signal signal-live"><i></i><span><small>WAITING ROOM</small><b>12 candidates live</b></span></div>
+      <div class="signal signal-speed"><span><small>INTERVIEW PACE</small><b>5.5 <em>/ recruiter hour</em></b></span></div>
+      </div>
+    </div>
+
+    <div class="scroll-cue"><span></span><b>SCROLL TO SEE THE QUEUE</b></div>
+  </div>
+
+  <div class="scroll-outcome">
+    <span>THE OUTCOME</span>
+    <p>One live queue. Qualified candidates.<br /><strong>Interviews happening now.</strong></p>
+    <small><i></i> Ready for the next candidate</small>
+  </div>
+</section>

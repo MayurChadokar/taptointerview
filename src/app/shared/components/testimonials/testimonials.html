@@ -1,0 +1,36 @@
+<section class="testimonials section" aria-labelledby="testimonials-title">
+  <div class="shell">
+    <header class="testimonial-heading" appReveal>
+      <span>WHY IT MATTERS</span>
+      <h2 id="testimonials-title">Built around real hiring momentum.</h2>
+      <p>Fewer handoffs between candidate interest and a live conversation.</p>
+    </header>
+
+    <div class="testimonial-layout">
+      <div class="reason-list" appReveal>
+        @for (reason of reasons; track reason.number) {
+          <article>
+            <span>{{ reason.number }}</span>
+            <div><h3>{{ reason.title }}</h3><p>{{ reason.copy }}</p></div>
+          </article>
+        }
+      </div>
+
+      <figure class="employer-quote" appReveal>
+        <div class="quote-mark" aria-hidden="true">&ldquo;</div>
+        <blockquote>Hiring insulators was always a long, expensive process, mostly due to scheduling and no-shows. Tap To Interview lets my team fill roles fast.</blockquote>
+        <figcaption>
+          <span>SEI</span>
+          <div><strong>Employer feedback</strong><small>Sun Energy Insulation</small></div>
+        </figcaption>
+      </figure>
+    </div>
+
+    <div class="candidate-feedback" appReveal>
+      <div><span>CANDIDATE FEEDBACK</span><h3>What candidates consistently noticed.</h3></div>
+      <ul aria-label="Candidate feedback themes">
+        @for (theme of feedbackThemes; track theme) { <li>{{ theme }}</li> }
+      </ul>
+    </div>
+  </div>
+</section>

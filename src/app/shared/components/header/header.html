@@ -1,0 +1,28 @@
+<header class="site-header" [class.is-scrolled]="scrolled()" [class.menu-open]="menuOpen()">
+  <div class="shell header-inner">
+    <a class="brand" href="#top" aria-label="Tap To Interview home" (click)="closeMenu()">
+      <span>TAP TO</span><strong>INTERVIEW</strong>
+      <small>Walk-in Interviews. Online.</small>
+    </a>
+
+    <button
+      #menuToggle
+      class="menu-toggle"
+      type="button"
+      aria-label="Toggle navigation"
+      [attr.aria-expanded]="menuOpen()"
+      aria-controls="site-navigation"
+      (click)="toggleMenu()"
+    >
+      <span></span><span></span>
+    </button>
+
+    <nav id="site-navigation" [class.is-open]="menuOpen()" aria-label="Primary navigation">
+      @for (item of navItems; track item.href) {
+        <a [href]="item.href" (click)="closeMenu()">{{ item.label }}</a>
+      }
+      <a class="login" href="https://app.taptointerview.com">Log In</a>
+      <a class="button button-small" href="#request-demo" (click)="closeMenu()">Request A Demo</a>
+    </nav>
+  </div>
+</header>

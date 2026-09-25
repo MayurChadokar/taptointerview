@@ -1,0 +1,192 @@
+/* Final responsive rules for the marketing site. Product UI is scoped separately. */
+html { scroll-padding-top: 90px; }
+app-home main section[id] { scroll-margin-top: 88px; }
+app-home .hero-grid > *,
+app-home .problem-grid > *,
+app-home .fits-grid > *,
+app-home .demo-grid > *,
+app-workflow-showcase .workflow-layout > *,
+app-testimonials .testimonial-layout > * { min-width: 0; }
+
+@media (max-width: 1080px) {
+  app-home .hero.dark-section { min-height: auto; padding: 110px 0 64px; }
+  app-home .hero .hero-grid { width: calc(100% - 3rem); grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  app-home .hero .hero-copy { width: 100%; max-width: 760px; }
+  app-home .hero .hero-product,
+  app-home .hero .hero-product:hover { width: 100%; max-width: 920px; min-width: 0; margin: 0; transform: none; translate: none; animation: none; opacity: 1; }
+  app-home .hero .hero-product { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+  app-home .hero .hero-product > .product-frame { grid-column: 1 / -1; min-width: 0; }
+  app-home .hero .queue-badge,
+  app-home .hero .speed-badge { position: static; inset: auto; width: auto; transform: none; margin: 0; pointer-events: none; }
+  app-home .hero .queue-badge .telemetry,
+  app-home .hero .speed-badge .telemetry { width: 100%; min-width: 0; height: 100%; padding: 12px; }
+  app-home .hero .speed-badge .telemetry::before { display: none; }
+  app-home .hero .hero-product::after,
+  app-home .hero .product-reflection { display: none; }
+  app-home .problem-grid,
+  app-home .fits-grid,
+  app-home .demo-grid { grid-template-columns: minmax(0, 1fr); gap: 2.5rem; }
+  app-home .benefit-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  app-home .fits .section-heading { position: static; }
+  app-home .result-panels { grid-template-columns: minmax(0, 1fr); }
+  app-home .position-heading { flex-direction: column; align-items: flex-start; }
+  app-home .position-heading p { max-width: 100%; }
+  app-home .position-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  app-home .demo-grid { max-width: 780px; }
+  app-home .footer-main { gap: 2rem; align-items: flex-start; }
+  app-home .footer-main nav { gap: .7rem 1rem; }
+  app-home .footer-bottom { flex-wrap: wrap; gap: .75rem 1.5rem; }
+  app-workflow-showcase .workflow-layout { grid-template-columns: minmax(0, 1fr); gap: 2rem; }
+  app-workflow-showcase .workflow-heading { flex-direction: column; align-items: flex-start; gap: 1rem; }
+  app-workflow-showcase .workflow-heading > p { max-width: 650px; }
+  app-workflow-showcase .workflow-steps { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0 1.2rem; }
+  app-scroll-showcase section.scroll-stage .perspective-wrap { width: 100%; max-width: 960px; margin-top: 2rem; }
+  app-scroll-showcase .pointer-tilt,
+  app-scroll-showcase .pointer-tilt:focus-within,
+  app-scroll-showcase .product-frame { transform: none; }
+  app-scroll-showcase .product-canvas app-product-mockup { transform: none; }
+  app-scroll-showcase .signal { display: none; }
+  app-scroll-showcase .story-copy { max-width: 100%; transform: none; }
+  app-pricing-section .plans { gap: .75rem; }
+  app-pricing-section .plans article { min-width: 0; padding: 1.4rem; }
+}
+
+@media (max-width: 768px) {
+  app-home .shell,
+  app-workflow-showcase .shell,
+  app-pricing-section .shell { width: calc(100% - 2rem); }
+  app-home .section,
+  app-workflow-showcase .workflow,
+  app-pricing-section .pricing { padding-block: 4rem; }
+  app-home .hero.dark-section { padding-top: 100px; padding-bottom: 3rem; }
+  app-home .hero .hero-grid { width: calc(100% - 2rem); gap: 2rem; }
+  app-home .hero .hero-copy h1 { font-size: clamp(2.5rem, 9.5vw, 4.2rem); line-height: 1.02; letter-spacing: -.055em; overflow-wrap: anywhere; }
+  app-home .hero .hero-copy h1 em { width: auto; max-width: 100%; }
+  app-home .hero .hero-copy h2 { font-size: clamp(1.05rem, 3.8vw, 1.4rem); line-height: 1.4; }
+  app-home .hero .hero-copy > p:not(.hero-value-line) { font-size: .95rem; line-height: 1.7; }
+  app-home .hero .hero-value-line { font-size: .75rem; line-height: 1.6; }
+  app-home .hero-actions { gap: .75rem; }
+  app-home .hero-actions .button { flex: 1; justify-content: center; min-height: 48px; }
+  app-home .hero .hero-orb { width: 100%; max-width: 440px; height: 400px; right: 0; }
+  app-home .problem h2,
+  app-home .section-heading h2,
+  app-home .position-heading h2,
+  app-home .demo-copy h2,
+  app-home .final-inner h2,
+  app-workflow-showcase .workflow-heading h2,
+  app-scroll-showcase .story-copy h2,
+  app-testimonials .testimonial-heading h2,
+  app-pricing-section .pricing h2 { font-size: clamp(1.85rem, 6.8vw, 2.8rem); line-height: 1.12; overflow-wrap: anywhere; }
+  app-home .section-heading p,
+  app-testimonials .testimonial-heading p,
+  app-pricing-section header p { font-size: .95rem; line-height: 1.7; }
+  app-home .section-heading.centered { margin-bottom: 2rem; }
+  app-home .path-comparison { margin-top: 2rem; padding: 1rem; }
+  app-home .path { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; padding: .7rem 0; }
+  app-home .path b { grid-column: 1 / -1; width: auto; margin-bottom: .25rem; }
+  app-home .path i { display: none; }
+  app-home .path span { min-width: 0; padding: .8rem .4rem; }
+  app-home .channels { grid-template-columns: minmax(0, 1fr); }
+  app-home .channels article { min-height: 84px; padding: 1rem; gap: .75rem; }
+  app-home .channels h3 { min-width: 0; overflow-wrap: anywhere; }
+  app-home .link-chip { max-width: 100%; font-size: .75rem; overflow-wrap: anywhere; }
+  app-home .link-chip > span { flex-shrink: 0; }
+  app-home .result-panel { padding: 1.25rem; }
+  app-home .result-panel header { gap: .75rem; }
+  app-home .result-panel header > div { min-width: 0; }
+  app-home .result-panel h3 { font-size: 1.15rem; line-height: 1.4; }
+  app-home .metric-grid,
+  app-home .case-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  app-home .metric-grid div { min-width: 0; padding: .8rem .4rem; }
+  app-home .metric-grid b { font-size: clamp(1.5rem, 6vw, 2rem); }
+  app-home .position-grid { grid-template-columns: minmax(0, 1fr); }
+  app-home .position-grid article,
+  app-home .position-grid aside { min-height: 0; padding: 1.4rem; border-right: 0; border-bottom: 1px solid #263b4a; }
+  app-home .position-grid h3,
+  app-home .position-grid aside h3 { margin-top: 1rem; }
+  app-home .position-grid p { margin-bottom: 0; }
+  app-home .form-card { min-width: 0; padding: 1.25rem; }
+  app-home .final-inner { flex-direction: column; align-items: flex-start; gap: 1.25rem; }
+  app-home .final-inner > .button { width: 100%; justify-content: center; }
+  app-home .footer-main,
+  app-home .footer-bottom { flex-direction: column; align-items: flex-start; gap: 1.4rem; }
+  app-home .footer-main nav { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: 100%; gap: .25rem 1rem; }
+  app-home .footer-main nav a { display: flex; align-items: center; min-height: 44px; }
+  app-home .footer-bottom { font-size: .72rem; line-height: 1.7; overflow-wrap: anywhere; }
+  app-workflow-showcase .workflow-steps { grid-template-columns: minmax(0, 1fr); }
+  app-workflow-showcase .workflow-steps button { min-height: 64px; padding: 1rem 0; grid-template-columns: 34px minmax(0, 1fr) auto; gap: .75rem; }
+  app-workflow-showcase .workflow-steps small { display: block; font-size: .8rem; }
+  app-workflow-showcase .workflow-product { margin: 0; min-width: 0; }
+  app-workflow-showcase .workflow-canvas { min-height: 0; padding: .8rem; }
+  app-workflow-showcase .stage-panel { min-height: 310px; padding: .75rem; }
+  app-workflow-showcase .link-preview,
+  app-workflow-showcase .question-preview { min-width: 0; padding: 1.15rem; }
+  app-workflow-showcase .link-preview strong { padding: .8rem; overflow-wrap: anywhere; font-size: .8rem; }
+  app-workflow-showcase .stage-panel button { min-height: 44px; }
+  app-workflow-showcase .queue-preview > div { grid-template-columns: auto minmax(0, 1fr); gap: .6rem; padding: .8rem; }
+  app-workflow-showcase .queue-preview em { grid-column: 2; font-size: .6rem; }
+  app-workflow-showcase .interview-preview { grid-template-columns: minmax(0, 1fr); }
+  app-workflow-showcase .product-chrome { gap: .6rem; padding-inline: .75rem; }
+  app-workflow-showcase .product-chrome b { font-size: .6rem; text-align: center; }
+  app-workflow-showcase .channel-row { display: none; }
+  app-scroll-showcase section.scroll-stage > .sticky-scene { padding: 3.5rem 1rem !important; }
+  app-scroll-showcase .story-copy { margin-top: 0; }
+  app-scroll-showcase .story-copy p { font-size: .95rem; line-height: 1.7; }
+  app-scroll-showcase .product-frame { padding: 4px; border-radius: 14px; }
+  app-scroll-showcase .frame-edge { display: none; }
+  app-testimonials .testimonial-layout,
+  app-testimonials .candidate-feedback { grid-template-columns: minmax(0, 1fr); }
+  app-testimonials .reason-list article { grid-template-columns: 28px minmax(0, 1fr); gap: .75rem; min-height: 0; padding: 1.25rem; }
+  app-testimonials .reason-list p { font-size: .9rem; }
+  app-testimonials .employer-quote { padding: 1.5rem; }
+  app-testimonials blockquote { font-size: 1.3rem; line-height: 1.5; }
+  app-testimonials .candidate-feedback { padding: 1.25rem; gap: 1.2rem; }
+  app-testimonials .candidate-feedback li { font-size: .78rem; max-width: 100%; }
+  app-pricing-section .pricing header { margin-bottom: 2rem; }
+  app-pricing-section .plans { grid-template-columns: minmax(0, 1fr); }
+  app-pricing-section .plans article { min-height: 330px; padding: 1.5rem; }
+  app-pricing-section .plans small { position: static; margin-bottom: .9rem; }
+  app-pricing-section .plans li { font-size: .85rem; line-height: 1.5; }
+  app-pricing-section .pricing-trust { font-size: .8rem; line-height: 1.6; }
+  app-pricing-section .pricing-trust > span { flex-shrink: 0; }
+  app-demo-form .field-row { grid-template-columns: minmax(0, 1fr); }
+  app-demo-form label { min-width: 0; font-size: .85rem; }
+  app-demo-form input,
+  app-demo-form select { min-width: 0; max-width: 100%; font-size: 16px; }
+  app-demo-form .submit-button { white-space: normal; text-align: center; font-size: .8rem; min-height: 48px; }
+}
+
+@media (max-width: 380px) {
+  app-home .hero-actions { flex-direction: column; }
+  app-home .hero-actions .button { width: 100%; }
+  app-home .benefit-grid { grid-template-columns: minmax(0, 1fr); }
+  app-header .brand { font-size: 1rem; }
+  app-home .hero .hero-copy h1 { font-size: 2.45rem; }
+  app-workflow-showcase .product-chrome em { display: none; }
+  app-workflow-showcase .product-chrome { grid-template-columns: auto minmax(0, 1fr); }
+}
+
+@media (hover: none), (pointer: coarse) {
+  app-home .hero .hero-product,
+  app-home .hero .hero-product:hover { animation: none; }
+  app-home .channels article:hover,
+  app-pricing-section .plans article:hover { transform: none; }
+}
+
+/* Keep each hero phrase on a compact line within the available copy column. */
+app-home .hero .hero-copy { container-type: inline-size; }
+app-home .hero .hero-copy h1 {
+  font-size: clamp(1.1rem, 6.8cqw, 2.4rem);
+  line-height: 1.16;
+  letter-spacing: -.04em;
+  margin: .9rem 0 .75rem;
+  overflow-wrap: normal;
+}
+app-home .hero .hero-copy h1 .headline-primary,
+app-home .hero .hero-copy h1 em { display: block; width: auto; max-width: 100%; }
+app-home .hero .hero-copy h1 em { margin-top: .12em; }
+app-home .hero .hero-copy h2 { margin-block: .8rem; font-size: clamp(1rem, 3.5cqw, 1.2rem); line-height: 1.4; }
+app-home .hero .hero-copy > p:not(.hero-value-line) { margin-bottom: 1.2rem; }
+@media (min-width: 1081px) {
+  app-home .hero.dark-section { min-height: auto; padding-block: 110px 52px; }
+}

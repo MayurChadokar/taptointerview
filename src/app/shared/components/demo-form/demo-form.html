@@ -1,0 +1,35 @@
+@if (submitted()) {
+  <div class="success" role="status">
+    <span>✓</span>
+    <h3>You're on the list.</h3>
+    <p>Thanks for your interest. Our team will be in touch with your interview link.</p>
+    <button type="button" class="text-button" (click)="submitted.set(false)">Submit another response</button>
+  </div>
+} @else {
+  <form [formGroup]="form" (ngSubmit)="submit()" novalidate>
+    <div class="field-row">
+      <label>First Name<input type="text" formControlName="firstName" autocomplete="given-name" /></label>
+      <label>Last Name<input type="text" formControlName="lastName" autocomplete="family-name" /></label>
+    </div>
+    <div class="field-row">
+      <label>Company<input type="text" formControlName="company" autocomplete="organization" /></label>
+      <label>Role / Title<input type="text" formControlName="role" autocomplete="organization-title" /></label>
+    </div>
+    <div class="field-row">
+      <label>Work Email<input type="email" formControlName="email" autocomplete="email" /></label>
+      <label>Mobile Phone<input type="tel" formControlName="phone" autocomplete="tel" /></label>
+    </div>
+    <label>Weekly Interview Volume
+      <select formControlName="volume">
+        <option value="">Select a range</option>
+        <option>1–10 interviews</option><option>11–25 interviews</option>
+        <option>26–50 interviews</option><option>51–100 interviews</option><option>100+ interviews</option>
+      </select>
+    </label>
+    @if (form.touched && form.invalid) { <p class="form-error">Please complete all fields with a valid work email.</p> }
+    <button class="button submit-button" type="submit" [disabled]="submitting()">
+      {{ submitting() ? 'SENDING…' : 'SEND ME MY INTERVIEW LINK' }} <span>→</span>
+    </button>
+    <small>By submitting, you agree to be contacted about Tap To Interview.</small>
+  </form>
+}

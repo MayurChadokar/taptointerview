@@ -1,0 +1,65 @@
+/* Explicit bridge for component-scoped legacy light styles. */
+app-home .problem,
+app-home .fits,
+app-home .positioning { color: #eef3f6 !important; }
+
+app-home .problem h2,
+app-home .problem h3,
+app-home .fits h2,
+app-home .fits h3,
+app-home .positioning h2,
+app-home .positioning h3,
+app-home .demo h2,
+app-home .demo h3 { color: #ffffff !important; -webkit-text-fill-color: #ffffff !important; }
+
+app-home .problem-grid > div:first-child p,
+app-home .benefit-grid p,
+app-home .fits .section-heading p,
+app-home .position-heading p,
+app-home .position-grid p,
+app-home .demo-copy > p { color: #9aabba !important; -webkit-text-fill-color: #9aabba !important; }
+
+app-home .benefit-grid article {
+  color: #dce4e9 !important;
+  background: linear-gradient(150deg, #0e1e2b, #0a1722) !important;
+  border-color: #243949 !important;
+}
+
+app-home .benefit-grid .line-icon {
+  color: #ff8060 !important;
+  background: #241a1b !important;
+  border-color: #583027 !important;
+}
+
+app-home .path-comparison {
+  color: #d7e0e6 !important;
+  background: #081521 !important;
+  border-color: #263a49 !important;
+}
+
+app-home .path + .path { border-color: #263a49 !important; }
+app-home .path.muted { color: #81919e !important; }
+app-home .path.muted span { color: #9aabba !important; background: #111f2b !important; }
+app-home .path.fast span { color: #ffb19d !important; background: #2a1b1a !important; }
+
+app-home .channels { background: #081521 !important; border-color: #263b4a !important; }
+app-home .channels article { color: #dbe3e8 !important; background: linear-gradient(145deg, #0d1c28, #091722) !important; border-color: #263b4a !important; }
+app-home .channels article:hover { background: #251b1c !important; }
+app-home .channels h3 { color: white !important; }
+app-home .channels i { color: #ff8060 !important; }
+app-home .link-chip { color: #ffc2b2 !important; background: #281b1a !important; border-color: #663729 !important; }
+
+app-home .position-grid { border-color: #263b4a !important; }
+app-home .position-grid article,
+app-home .position-grid aside { border-color: #263b4a !important; }
+app-home .position-grid article { color: #eef3f6 !important; background: #0c1a26 !important; }
+app-home .position-grid article:hover { background: #20191b !important; }
+app-home .position-grid aside { color: #eef3f6 !important; background: linear-gradient(145deg, #281b1a, #151a22) !important; }
+app-home .position-grid .line-icon { color: #ff8060 !important; background: #301d1b !important; border-color: #67372b !important; }
+
+app-home .form-card {
+  color: #eef3f6 !important;
+  background: linear-gradient(150deg, #0e1d29, #09151f) !important;
+  border-color: #314554 !important;
+}
+app-home .form-card > p { color: #98a8b5 !important; }

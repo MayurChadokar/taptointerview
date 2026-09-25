@@ -1,0 +1,124 @@
+<div class="product-window" [attr.data-mode]="mode">
+  <aside class="mock-sidebar">
+    <div class="mini-brand">TAP TO <b>INTERVIEW</b></div>
+    <nav aria-label="Product demo navigation">
+      @for (item of tabs; track item.label) {
+        <button type="button" class="side-link" [class.active]="tab === item.label" [attr.aria-current]="tab === item.label ? 'page' : null" [attr.aria-label]="item.label" [disabled]="loggedOut" (click)="navigate(item.label)"><app-mock-icon [name]="item.icon" /><span>{{ item.label }}</span></button>
+      }
+    </nav>
+    <button class="sidebar-profile" type="button" [disabled]="loggedOut" (click)="navigate('Settings'); settingsTab = 'Account & Security'"><span>MC</span><div><b>{{ displayName }}</b><small>Admin</small></div></button>
+  </aside>
+  <div class="product-main">
+    <header class="product-topbar"><span class="company">{{ company }}</span><div><button class="credit-pill" type="button" [disabled]="loggedOut" (click)="navigate('Credits')">{{ credits }} Credits</button><button class="logout" type="button" (click)="loggedOut = !loggedOut"><app-mock-icon name="logout" />{{ loggedOut ? 'Return' : 'Logout' }}</button></div></header>
+    <div class="product-content">
+      @if (loggedOut) {
+        <section class="mock-card signed-out"><app-mock-icon name="logout" /><h3>You’re logged out of the preview.</h3><p>Step back in to explore the interview experience.</p><button class="primary" (click)="loggedOut = false">Return to demo</button></section>
+      } @else {
+        @if (notice()) { <div class="mock-notice" role="status"><span>{{ notice() }}</span><button type="button" aria-label="Dismiss message" (click)="notice.set('')">×</button></div> }
+        @if (tab === 'My Queue' && inInterview) {
+          <button class="back-link" type="button" (click)="saveNotes(); inInterview = false; notice.set('Interview paused. Choose Resume interview to return.');"><app-mock-icon name="back" /> Back to Queue</button>
+          <div class="interview-heading"><div><h3>Live Interview</h3><p>Dock Loader <span>·</span> Florida <span>·</span> Part-time</p></div><div class="interview-actions"><span class="timer"><i></i>{{ time }}</span><button class="primary" type="button" (click)="endInterview()">End Interview</button></div></div>
+          <div class="interview-grid">
+            <div class="call-column">
+              <div class="video-grid">
+                <div class="video-tile recruiter" [class.camera-off]="!camera">
+                  <div class="portrait-fallback">CD</div>
+                  @if (camera && !recruiterImageFailed) { <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=600&q=85" alt="Recruiter demo portrait" loading="lazy" (error)="recruiterImageFailed = true"> }
+                  <span class="role-label">Recruiter</span>
+                  @if (!camera) { <span class="camera-label">Camera off</span> }
+                  <div class="video-footer"><span><app-mock-icon name="people" /> Cesar Desir</span><app-mock-icon name="mic" [class.muted]="muted" /></div>
+                </div>
+                <div class="video-tile applicant"><div class="portrait-fallback">{{ current.initials }}</div>
+                  @if (!applicantImageFailed) { <img src="https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=600&q=85" alt="Applicant demo portrait" loading="lazy" (error)="applicantImageFailed = true"> }
+                  <span class="role-label">Applicant</span><div class="video-footer"><span>{{ current.name }}</span><app-mock-icon name="mic" /></div>
+                </div>
+              </div>
+              <div class="call-controls" aria-label="Demo interview controls">
+                <button type="button" [attr.aria-pressed]="muted" (click)="muted = !muted"><span><app-mock-icon name="mic" /></span>{{ muted ? 'Unmute' : 'Mute' }}</button>
+                <button type="button" [attr.aria-pressed]="!camera" (click)="camera = !camera"><span><app-mock-icon name="video" /></span>{{ camera ? 'Stop Video' : 'Start Video' }}</button>
+                <button type="button" [attr.aria-pressed]="sharing" (click)="sharing = !sharing"><span><app-mock-icon name="screen" /></span>{{ sharing ? 'Stop Sharing' : 'Share Screen' }}</button>
+                <button type="button" [attr.aria-expanded]="chatOpen" (click)="chatOpen = !chatOpen"><span><app-mock-icon name="chat" /></span>Chat</button>
+                <button type="button" [attr.aria-expanded]="moreOpen" (click)="moreOpen = !moreOpen"><span><app-mock-icon name="more" /></span>More</button>
+              </div>
+              @if (sharing) { <p class="inline-info">Screen sharing preview is on. No screen content is captured.</p> }
+              @if (moreOpen) { <div class="mock-card more-options"><button class="outline" type="button" (click)="selected = current; moreOpen = false">Candidate profile</button><button class="outline" type="button" (click)="notice.set('This is an interactive demo. No live audio or video is transmitted.'); moreOpen = false">Connection info</button></div> }
+              @if (chatOpen) { <section class="mock-card chat-panel"><h4><app-mock-icon name="chat" /> Interview Chat <small>Demo</small></h4><div class="messages" aria-live="polite">@for (message of messages; track $index) { <p><b>You</b> {{ message }}</p> } @empty { <p>Messages appear here in this preview.</p> }</div><form (ngSubmit)="sendMessage()"><input aria-label="Demo chat message" name="chatMessage" [(ngModel)]="chatMessage" placeholder="Write a message…" maxlength="500"><button class="outline" type="submit">Send</button></form></section> }
+              <section class="mock-card notes-card"><div class="card-heading"><h4><app-mock-icon name="notes" /> Interview Notes</h4><button class="outline" type="button" (click)="saveNotes()">Save Notes</button></div><textarea aria-label="Interview notes" [(ngModel)]="notes" placeholder="Add your notes about this interview…" rows="3" maxlength="3000"></textarea></section>
+            </div>
+            <div class="details-column">
+              <section class="mock-card waiting-card"><h4><app-mock-icon name="clock" /> Waiting Room ({{ waiting.length }})</h4>@for (person of waiting; track person.name) { <div class="waiting-person"><span class="avatar">{{ person.initials }}</span><div><b>{{ person.name }}</b><small><app-mock-icon name="clock" /> Joined {{ person.joined }}</small></div><button class="outline" type="button" (click)="selected = person">View</button></div> } @empty { <p class="empty">No candidates waiting.</p> }</section>
+              <section class="mock-card candidate-card"><h4><app-mock-icon name="people" /> Candidate Details</h4><div class="candidate-person"><span class="avatar">{{ current.initials }}</span><div><b>{{ current.name }}</b><small>Joined {{ current.joined }}</small></div></div><dl><div><dt>Position</dt><dd>Dock Loader</dd></div><div><dt>Location</dt><dd>Florida</dd></div><div><dt>Employment Type</dt><dd>Part-time</dd></div></dl><button class="outline full" type="button" (click)="selected = current">View Full Application</button></section>
+            </div>
+          </div>
+          <p class="preview-caption">Interactive demo · Sample portraits · Call controls are simulated</p>
+        } @else if (tab === 'My Queue') {
+          <div class="panel-heading reference-heading"><div><span class="page-kicker">QUEUE MANAGEMENT</span><h3>MY QUEUE</h3></div>@if (!interviewEnded) { <button class="primary" type="button" (click)="inInterview = true; notice.set('')">Resume interview</button> }</div>
+          @if (candidates.length) {
+            <section class="mock-card"><h4><app-mock-icon name="people" /> Waiting Room ({{ candidates.length }})</h4>@for (person of candidates; track person.name) { <div class="queue-person"><span class="avatar">{{ person.initials }}</span><div><b>{{ person.name }}</b><small>Joined {{ person.joined }}</small></div><button class="outline" type="button" (click)="selected = person">View</button><button class="primary" type="button" [disabled]="!interviewEnded" (click)="admit(person)">Admit</button></div> }</section>
+          } @else {
+            <section class="mock-card empty-state"><app-mock-icon name="clock" /><h4>No Active Queues</h4><p>You don't have any active jobs with candidates waiting.</p></section>
+            <button class="demo-launch" type="button" (click)="startDemo()">Try a live interview demo →</button>
+          }
+          @if (!interviewEnded) { <p class="inline-info">Resume and end the current interview before admitting the next candidate.</p> }
+        } @else {
+          <div class="panel-heading reference-heading"><div><span class="page-kicker">{{ pageKicker }}</span>@if (tab === 'Dashboard') { <h3>TAP TO INTERVIEW <strong>DASHBOARD</strong></h3> } @else { <h3>{{ pageTitle }}</h3> }@if (tab === 'Post Job') { <p>Follow the steps below to set up your interactive waiting room.</p> }</div></div>
+          @switch (tab) {
+            @case ('Dashboard') {
+              <div class="dashboard-stats">
+                <button class="metric metric-dark" (click)="navigate('My Queue')"><span>IN QUEUE NOW <app-mock-icon name="people" /></span><b>{{ candidates.length }}</b><small>{{ candidates.length ? 'Candidates waiting' : 'No candidates waiting' }}</small></button>
+                <button class="metric metric-blue" (click)="navigate('My Queue')"><span>INTERVIEWS TODAY <app-mock-icon name="video" /></span><b>{{ completed }}</b><small>{{ completed ? 'Completed interviews' : 'No interviews today' }}</small></button>
+                <button class="metric metric-green" (click)="notice.set(passedInterviews + ' of ' + evaluatedInterviews + ' evaluated sample interviews passed screening.')"><span>PASS RATE <span>↗</span></span><b>{{ passRate }}%</b><small>{{ passedInterviews }} of {{ evaluatedInterviews }} evaluations passed</small></button>
+                <button class="metric metric-orange" (click)="navigate('Credits')"><span>CREDITS LEFT <app-mock-icon name="credits" /></span><b>{{ credits }}</b><small>{{ credits ? 'Ready for your next interview' : 'Purchase credits to start' }}</small></button>
+              </div>
+              <section class="mock-card active-jobs"><div class="section-title"><h4>Active Jobs</h4><button class="text-action" (click)="navigate('My Jobs')">View All</button></div>@for (job of activeJobs; track $index) { <div class="job-row"><app-mock-icon name="job" /><div><b>{{ job.title }}</b><small>{{ job.location }} · {{ job.type }}</small></div><button class="outline" (click)="navigate('My Queue')">View Queue</button></div> } @empty { <div class="jobs-empty"><p>No active job postings.</p><button class="text-action" (click)="navigate('Post Job')">Post one now →</button></div> }</section>
+            }
+            @case ('My Jobs') {
+              <div class="jobs-toolbar"><input aria-label="Search jobs" [(ngModel)]="jobSearch" placeholder="Search jobs…"><select aria-label="Job status" [(ngModel)]="jobFilter"><option>All</option><option>Live</option><option>Paused</option></select><button class="primary" (click)="navigate('Post Job')">+ Post Job</button></div>
+              <section class="mock-card">@for (job of filteredJobs; track $index) { <div class="job-row"><app-mock-icon name="job" /><div><b>{{ job.title }}</b><small>{{ job.location }} · {{ job.type }} · {{ job.live ? 'Live' : 'Paused' }}</small><p>{{ job.description }}</p></div><button class="outline" (click)="job.live = !job.live">{{ job.live ? 'Pause' : 'Publish' }}</button></div> } @empty { <div class="empty-state"><app-mock-icon name="job" /><h4>{{ jobs.length ? 'No matching jobs' : 'No Job Postings' }}</h4><p>{{ jobs.length ? 'Try another search or filter.' : 'Create your first job to start interviewing.' }}</p><button class="text-action" (click)="navigate('Post Job')">Post one now →</button></div> }</section>
+            }
+            @case ('Post Job') {
+              <nav class="wizard-steps" aria-label="Job setup steps">@for (label of steps; track label; let index = $index) { <button type="button" [class.current]="step === index" [class.done]="step > index" [disabled]="index > step" [attr.aria-current]="step === index ? 'step' : null" (click)="step = index; notice.set(''); scrollTop()"><span><app-mock-icon [name]="['notes', 'settings', 'clock', 'people', 'plus'][index]" /></span><b>{{ label }}</b><small>{{ step === index ? 'CURRENT' : step > index ? 'COMPLETE' : '' }}</small></button> }</nav>
+              <form class="mock-card mock-form wizard-form" #jobForm="ngForm" (ngSubmit)="postJob(jobForm)">
+                @switch (step) {
+                  @case (0) {
+                    <label><span><app-mock-icon name="job" /> JOB TITLE <em>*</em></span><input name="title" [(ngModel)]="draftJob.title" required maxlength="100" placeholder="e.g. Senior Backend Engineer"></label>
+                    <div class="field-grid"><label><span><app-mock-icon name="people" /> LOCATION <em>*</em></span><input name="location" [(ngModel)]="draftJob.location" required maxlength="100" placeholder="Remote, NYC / Hybrid..."></label><label><span><app-mock-icon name="job" /> DEPARTMENT <em>*</em></span><input name="department" [(ngModel)]="draftJob.department" required maxlength="100" placeholder="e.g. Engineering, Sales..."></label></div>
+                    <fieldset><legend><app-mock-icon name="job" /> EMPLOYMENT TYPE</legend><div class="employment-options">@for (type of employmentTypes; track type) { <label [class.chosen]="draftJob.type === type"><input type="radio" name="employmentType" [value]="type" [(ngModel)]="draftJob.type">{{ type }}</label> }</div></fieldset>
+                    <label><span><app-mock-icon name="credits" /> SALARY RANGE</span></label><div class="salary-row"><label><span class="sr-only">Salary from</span><input type="number" name="salaryFrom" [(ngModel)]="draftJob.salaryFrom" min="0" placeholder="$  From"></label><span>–</span><label><span class="sr-only">Salary to</span><input type="number" name="salaryTo" [(ngModel)]="draftJob.salaryTo" min="0" placeholder="$  To"></label></div>
+                    @if (draftJob.salaryFrom !== null && draftJob.salaryTo !== null && draftJob.salaryTo < draftJob.salaryFrom) { <p class="field-error">The upper salary must be at least the lower salary.</p> }
+                    <label><span><app-mock-icon name="notes" /> JOB DESCRIPTION <em>*</em></span><textarea name="description" [(ngModel)]="draftJob.description" rows="5" required maxlength="3000" placeholder="Describe the role, responsibilities, and what success looks like..."></textarea></label>
+                    <label><span><app-mock-icon name="notes" /> REQUIREMENTS <small>(optional)</small></span><textarea name="requirements" [(ngModel)]="draftJob.requirements" rows="5" maxlength="2000" placeholder="List the key requirements and qualifications..."></textarea></label>
+                  }
+                  @case (1) { <h4>Candidate Qualifications</h4><p class="form-hint">Add a screening question for your interactive waiting room.</p><label>SCREENING QUESTION <small>(optional)</small><input name="question" [(ngModel)]="draftJob.question" maxlength="200" placeholder="e.g. Are you available to work weekends?"></label><p class="inline-info">Candidates can answer this question before joining the demo queue.</p> }
+                  @case (2) { <h4>Interview Windows</h4><p class="form-hint">Choose a future start and end time for your interview window.</p><div class="field-grid"><label>START TIME <em>*</em><input type="datetime-local" name="start" [(ngModel)]="draftJob.start" required></label><label>END TIME <em>*</em><input type="datetime-local" name="end" [(ngModel)]="draftJob.end" required></label></div><p class="inline-info">Use your local time. The start must be in the future and the end must be after the start.</p> }
+                  @case (3) { <h4>Assign Interviewers</h4><p class="form-hint">Select at least one team member to host interviews.</p>@for (member of team; track member.email) { <label class="selection-row"><input type="checkbox" [checked]="draftJob.interviewers.includes(member.email)" (change)="toggleSelection(draftJob.interviewers, member.email)"><span><b>{{ member.first }} {{ member.last }}</b><small>{{ member.email }} · {{ member.role }}</small></span></label> } }
+                  @case (4) { <h4>Review Your Job</h4><dl class="review-details"><div><dt>Job title</dt><dd>{{ draftJob.title }}</dd></div><div><dt>Location</dt><dd>{{ draftJob.location }}</dd></div><div><dt>Department</dt><dd>{{ draftJob.department }}</dd></div><div><dt>Employment type</dt><dd>{{ draftJob.type }}</dd></div><div><dt>Interview window</dt><dd>{{ draftJob.start.replace('T', ' ') }} — {{ draftJob.end.replace('T', ' ') }}</dd></div><div><dt>Interviewers</dt><dd>{{ draftJob.interviewers.length }} selected</dd></div></dl><p class="review-description">{{ draftJob.description }}</p><p class="inline-info">Publishing adds this job to your product preview. It will not create a public listing.</p> }
+                }
+                <div class="wizard-actions"><button type="button" class="secondary" (click)="step ? step = step - 1 : navigate('My Jobs'); notice.set(''); scrollTop()">{{ step ? 'BACK' : 'CANCEL' }}</button><button class="primary" type="submit">{{ step === 4 ? 'PUBLISH JOB' : 'NEXT STEP' }}</button></div>
+              </form>
+            }
+            @case ('Team') {
+              <form class="mock-card mock-form team-form" #inviteForm="ngForm" (ngSubmit)="addMember(inviteForm)"><div class="section-title"><h4><app-mock-icon name="people" /> {{ editingMember === null ? 'INVITE TEAM MEMBER' : 'EDIT TEAM MEMBER' }}</h4></div><div class="field-grid"><label>FIRST NAME<input name="first" [(ngModel)]="invite.first" placeholder="Jane" required maxlength="60"></label><label>LAST NAME<input name="last" [(ngModel)]="invite.last" placeholder="Doe" required maxlength="60"></label><label>EMAIL ADDRESS<input type="email" name="email" [(ngModel)]="invite.email" placeholder="interviewer@example.com" required email maxlength="150"></label><fieldset><legend>ROLE</legend><div class="role-options"><button type="button" [class.chosen]="invite.role === 'Interviewer'" [disabled]="editingMember === 0" (click)="invite.role = 'Interviewer'"><app-mock-icon name="people" /><span><b>INTERVIEWER</b><small>Can view assigned jobs.</small></span></button><button type="button" [class.chosen]="invite.role === 'Admin'" (click)="invite.role = 'Admin'"><app-mock-icon name="settings" /><span><b>ADMIN</b><small>Full company access.</small></span></button></div></fieldset></div><div class="assigned-jobs"><h4><app-mock-icon name="job" /> ASSIGNED JOBS ACCESS ({{ invite.jobs.length }} SELECTED)</h4>@for (job of jobs; track $index) { <label class="selection-row"><input type="checkbox" [checked]="invite.jobs.includes(job.title)" (change)="toggleSelection(invite.jobs, job.title)">{{ job.title }}</label> } @empty { <p>No active or draft jobs found. You can still send the invite, but they won't have access to any jobs initially.</p> }</div><div class="form-end">@if (editingMember !== null) { <button class="secondary" type="button" (click)="cancelInvite()">Cancel</button> }<button class="primary" type="submit">{{ editingMember === null ? 'Send Invitation' : 'Save Member' }}</button></div></form>
+              <section class="mock-card members-card"><h4>ACTIVE MEMBERS</h4><p class="form-hint">Click on a member to edit their profile.</p>@for (member of team; track $index) { <button class="member-card" type="button" (click)="editMember($index)"><span class="avatar">{{ member.first.charAt(0) }}</span><span class="member-info"><b>{{ member.first }} {{ member.last }} @if ($first) { <em>OWNER</em> }</b><small>{{ member.email }}</small></span><span class="active-pill">Active</span><span class="member-role">{{ member.role }}</span></button> }</section>
+            }
+            @case ('Settings') {
+              <section class="mock-card settings-layout"><nav aria-label="Settings sections">@for (section of ['Company Profile', 'Account & Security', 'Notifications']; track section) { <button type="button" [class.selected-setting]="settingsTab === section" [attr.aria-current]="settingsTab === section ? 'page' : null" (click)="settingsTab = section; notice.set('')"><app-mock-icon [name]="section === 'Company Profile' ? 'job' : 'settings'" />{{ section }}</button> }</nav><div class="settings-content">
+                @switch (settingsTab) {
+                  @case ('Company Profile') { <h4>Company Profile</h4><p class="form-hint">Update your company details and branding.</p><form class="mock-form" (ngSubmit)="saveSettings()"><label>COMPANY NAME<input name="company" [(ngModel)]="companyDraft" required maxlength="80"></label><label>COMPANY SLUG<input [value]="slug" readonly></label><label>COMPANY URL<div class="url-row"><input [value]="companyUrl" readonly aria-label="Company URL"><button class="secondary" type="button" aria-label="Copy company URL" (click)="copyCompanyUrl()">▢</button><button class="primary" type="button" (click)="previewCompany = !previewCompany">Preview ↗</button></div></label>@if (previewCompany) { <section class="company-preview"><h4>{{ company }}</h4><p>{{ activeJobs.length }} active job opportunities</p><button type="button" class="text-action" (click)="navigate('My Jobs')">Explore jobs →</button></section> }<div class="form-end"><button class="primary" type="submit" [disabled]="!companyDraft.trim() || companyDraft === company">Save Changes</button></div></form> }
+                  @case ('Account & Security') { <h4>Account &amp; Security</h4><p class="form-hint">Manage your profile in this preview.</p><form class="mock-form" #accountForm="ngForm" (ngSubmit)="saveAccount(accountForm)"><label>FULL NAME<input name="accountName" [(ngModel)]="accountName" required maxlength="100"></label><label>EMAIL ADDRESS<input name="accountEmail" [(ngModel)]="accountEmail" type="email" required email maxlength="150"></label><p class="inline-info">This demo has no password or authentication backend.</p><div class="form-end"><button class="primary" type="submit">Save Changes</button></div></form> }
+                  @case ('Notifications') { <h4>Notifications</h4><p class="form-hint">Choose the updates you want to receive.</p><form class="mock-form" (ngSubmit)="notice.set('Notification preferences saved for this preview. No messages will be sent.')"><label class="selection-row"><input type="checkbox" name="reminders" [(ngModel)]="reminders"><span><b>Interview reminders</b><small>Reminders for upcoming interview windows.</small></span></label><label class="selection-row"><input type="checkbox" name="updates" [(ngModel)]="emailUpdates"><span><b>Email updates</b><small>Updates about your jobs and candidates.</small></span></label><div class="form-end"><button class="primary" type="submit">Save Preferences</button></div></form> }
+                }
+              </div></section>
+            }
+            @case ('Credits') { <section class="mock-card welcome-card"><h4>Available credits</h4><strong class="credit-balance">{{ credits }}</strong><p>Explore with sample credits. No payment is collected.</p><button class="primary" (click)="credits = credits + 10; notice.set('10 demo credits added. No payment was made.')">+ Add 10 demo credits</button></section> }
+          }
+          <p class="preview-caption">Changes last for this preview only. No backend is connected.</p>
+        }
+        @if (selected; as person) {
+          <div class="application-overlay"><section class="mock-card application-panel" role="region" aria-label="Candidate application"><div class="card-heading"><h4>Candidate Application</h4><button class="outline" type="button" aria-label="Close candidate application" (click)="selected = null">×</button></div><span class="avatar">{{ person.initials }}</span><h3>{{ person.name }}</h3><p>Dock Loader · Florida · Part-time</p><dl><div><dt>Joined</dt><dd>{{ person.joined }}</dd></div><div><dt>Available for 3–4 hours?</dt><dd>Yes</dd></div><div><dt>Experience</dt><dd>Warehouse operations</dd></div></dl><p class="inline-info">Sample candidate profile for this interactive preview.</p><button class="outline full" type="button" (click)="selected = null">Back to {{ inInterview ? 'interview' : 'queue' }}</button></section></div>
+        }
+      }
+    </div>
+  </div>
+</div>
+<div class="showcase-tools"><span>Interactive product showcase</span><button type="button" (click)="expand()">Expand / exit showcase ↗</button></div>

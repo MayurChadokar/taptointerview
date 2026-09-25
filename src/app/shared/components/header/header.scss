@@ -1,0 +1,89 @@
+:host { display: contents; }
+
+.site-header {
+  position: fixed;
+  inset: 0 0 auto;
+  z-index: 100;
+  color: var(--white);
+  transition: background .3s ease, border-color .3s ease, backdrop-filter .3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.site-header.is-scrolled {
+  background: rgb(5 14 25 / 88%);
+  border-color: rgb(255 255 255 / 8%);
+  backdrop-filter: blur(18px);
+}
+
+.header-inner {
+  min-height: 82px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.brand {
+  color: inherit;
+  text-decoration: none;
+  font-size: 1.12rem;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -.04em;
+}
+
+.brand strong { color: var(--orange); }
+.brand small {
+  display: block;
+  margin-top: 7px;
+  color: rgb(255 255 255 / 66%);
+  font-size: .55rem;
+  font-weight: 500;
+  letter-spacing: 0;
+}
+
+nav { display: flex; align-items: center; gap: clamp(1.25rem, 2.3vw, 2.25rem); }
+nav a { color: rgb(255 255 255 / 78%); text-decoration: none; font-size: .88rem; font-weight: 600; transition: color .2s ease; }
+nav a:hover, nav a:focus-visible { color: var(--white); }
+nav .login { padding: .7rem 1rem; border: 1px solid rgb(235 95 63 / 65%); border-radius: 8px; }
+nav .button { color: var(--white); }
+.menu-toggle { display: none; }
+
+@media (max-width: 1080px) {
+  .site-header { background: rgb(5 14 25 / 96%); }
+  .site-header.menu-open { background: #050e19; }
+  .header-inner { min-height: 72px; }
+  .menu-toggle {
+    display: grid;
+    gap: 6px;
+    padding: 10px;
+    width: 44px;
+    height: 44px;
+    align-content: center;
+    justify-content: center;
+    border: 0;
+    background: transparent;
+  }
+  .menu-toggle span { width: 25px; height: 2px; background: var(--white); }
+  nav {
+    position: absolute;
+    inset: 72px 1rem auto;
+    max-height: calc(100dvh - 88px - env(safe-area-inset-bottom));
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    display: grid;
+    gap: .4rem;
+    padding: 1rem;
+    background: #0b1725;
+    border: 1px solid rgb(255 255 255 / 10%);
+    border-radius: 14px;
+    box-shadow: var(--shadow-lg);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: .2s ease;
+  }
+  nav.is-open { opacity: 1; visibility: visible; transform: none; }
+  nav a { display: flex; align-items: center; min-height: 44px; padding: .8rem; }
+  nav .login { border: 0; }
+  nav .button { justify-content: center; text-align: center; }
+}

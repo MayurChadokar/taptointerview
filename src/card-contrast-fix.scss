@@ -1,0 +1,42 @@
+/* Final contrast guard for legacy component-scoped light-theme rules. */
+app-home .problem .problem-grid h2,
+app-home .problem .benefit-grid article h3,
+app-home .fits .section-heading h2,
+app-home .fits .channels article h3,
+app-home .positioning .position-heading h2,
+app-home .positioning .position-grid article h3,
+app-home .positioning .position-grid aside h3,
+app-home .demo .demo-copy h2 {
+  color: #f7f9fb !important;
+  -webkit-text-fill-color: #f7f9fb !important;
+  opacity: 1 !important;
+}
+
+app-home .problem .benefit-grid article p,
+app-home .fits .section-heading p,
+app-home .positioning .position-grid article p,
+app-home .positioning .position-grid aside p,
+app-home .demo .demo-copy > p {
+  color: #a9bac7 !important;
+  -webkit-text-fill-color: #a9bac7 !important;
+  opacity: 1 !important;
+}
+
+app-home .fits .channels article > span,
+app-home .positioning .position-grid article > span {
+  color: #ff8060 !important;
+  -webkit-text-fill-color: #ff8060 !important;
+}
+
+app-home .fits .link-chip,
+app-home .fits .link-chip span {
+  color: #ffc2b2 !important;
+  -webkit-text-fill-color: #ffc2b2 !important;
+  opacity: 1 !important;
+}
+
+app-home .demo .form-card label {
+  color: #c5d0d9 !important;
+  -webkit-text-fill-color: #c5d0d9 !important;
+  opacity: 1 !important;
+}

@@ -1,0 +1,40 @@
+/* Visibility safety layer: content remains readable if motion observers are delayed or unavailable. */
+[appReveal] {
+  opacity: 1 !important;
+  transform: none !important;
+}
+
+[appReveal].is-visible {
+  animation: premium-reveal .6s ease both;
+}
+
+@keyframes premium-reveal {
+  from { opacity: .35; transform: translateY(14px); }
+  to { opacity: 1; transform: none; }
+}
+
+app-home main h2,
+app-home main h3,
+app-workflow-showcase h2,
+app-workflow-showcase h3,
+app-pricing-section h2,
+app-pricing-section h3 {
+  opacity: 1 !important;
+}
+
+app-home .demo-copy h2,
+app-home .form-card h3,
+app-home .problem h2,
+app-home .fits h2,
+app-home .positioning h2 {
+  color: #ffffff !important;
+  -webkit-text-fill-color: #ffffff !important;
+}
+
+app-home .demo-copy p,
+app-home .form-card p,
+app-home .problem p,
+app-home .fits p,
+app-home .positioning p {
+  opacity: 1 !important;
+}

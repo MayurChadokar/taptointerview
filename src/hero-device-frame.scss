@@ -1,0 +1,152 @@
+/* MacBook-inspired product presentation without changing the product UI. */
+@media (min-width: 1081px) {
+  app-home .hero .hero-copy { position: relative; z-index: 4; }
+  app-home .hero .hero-product {
+    z-index: 2;
+    transform: perspective(1900px) rotateY(-5deg) rotateX(1.5deg) rotateZ(-.55deg) translateX(-6px);
+  }
+  app-home .hero .hero-product:hover {
+    transform: perspective(1900px) rotateY(-2.5deg) rotateX(.75deg) rotateZ(-.25deg) translateX(-6px) translateY(-4px);
+  }
+}
+
+app-home .hero .product-frame {
+  position: relative;
+  padding-top: 27px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  border-radius: 20px;
+  background:
+    linear-gradient(#0b121b, #0b121b) padding-box,
+    linear-gradient(135deg, #ffad7d 0%, #eb5f3f 24%, #643329 52%, #eb5f3f 78%, #ffad7d 100%) border-box;
+  box-shadow:
+    0 45px 100px rgb(0 0 0 / 46%),
+    0 20px 50px rgb(0 0 0 / 30%),
+    0 0 24px rgb(235 95 63 / 14%);
+}
+
+app-home .hero .product-frame::before {
+  content: '';
+  position: absolute;
+  inset: 0 0 auto;
+  z-index: 5;
+  height: 27px;
+  background: linear-gradient(180deg, #171e27, #0b1119);
+  border-bottom: 1px solid rgb(255 255 255 / 8%);
+}
+
+app-home .hero .product-frame::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 14px;
+  z-index: 6;
+  width: 7px;
+  height: 7px;
+  background: #ff6650;
+  border-radius: 50%;
+  box-shadow: 13px 0 #e7ad3c, 26px 0 #45b56a;
+}
+
+app-home .hero .product-frame app-product-mockup .product-window {
+  border-radius: 0 0 18px 18px;
+}
+
+app-home .hero .hero-product::after {
+  content: '';
+  position: absolute;
+  left: 5%;
+  right: 5%;
+  bottom: -17px;
+  z-index: 1;
+  height: 18px;
+  pointer-events: none;
+  background: linear-gradient(180deg, #9aa4ae 0%, #4c5661 38%, #171e26 100%);
+  border-radius: 2px 2px 48% 48%;
+  box-shadow: 0 16px 28px rgb(0 0 0 / 34%), inset 0 1px rgb(255 255 255 / 34%);
+  transform: perspective(360px) rotateX(64deg);
+  transform-origin: top;
+}
+
+app-home .hero .product-glow {
+  opacity: .62;
+  background: radial-gradient(ellipse at 48% 52%, rgb(235 95 63 / 13%), transparent 69%);
+}
+
+@media (max-width: 1080px) {
+  app-home .hero .hero-product { transform: perspective(1500px) rotateY(-2deg) rotateX(.7deg); }
+  app-home .hero .hero-product:hover { transform: perspective(1500px) rotateY(-1deg) rotateX(.35deg) translateY(-3px); }
+}
+
+@media (max-width: 768px) {
+  app-home .hero .hero-product,
+  app-home .hero .hero-product:hover { transform: none; }
+  app-home .hero .product-frame { padding-top: 22px; border-radius: 15px; }
+  app-home .hero .product-frame::before { height: 22px; }
+  app-home .hero .product-frame::after { top: 8px; left: 11px; width: 6px; height: 6px; box-shadow: 11px 0 #e7ad3c, 22px 0 #45b56a; }
+  app-home .hero .hero-product::after { bottom: -12px; height: 14px; }
+}
+
+app-home .hero.dark-section {
+  background:
+    radial-gradient(ellipse at 78% 42%, rgb(235 95 63 / 23%), transparent 48%),
+    radial-gradient(circle at 90% 16%, rgb(255 135 82 / 15%), transparent 20%),
+    radial-gradient(circle at 51% 82%, rgb(235 95 63 / 12%), transparent 25%),
+    linear-gradient(120deg, #080b12, #161116 65%, #101923) !important;
+}
+
+app-home .hero .hero-copy h1 {
+  font-size: clamp(3rem, 4.15vw, 4.35rem);
+  line-height: .97;
+  letter-spacing: -.055em;
+}
+
+app-home .hero .hero-copy h1 em {
+  margin-top: .24em;
+  color: #eb5f3f;
+  background: none;
+  -webkit-text-fill-color: #eb5f3f;
+}
+
+app-home .hero .hero-copy h2 { font-size: clamp(1rem, 1.35vw, 1.18rem); }
+app-home .hero .hero-copy > p:not(.hero-value-line) { font-size: .95rem; line-height: 1.65; }
+app-home .hero .hero-copy > .hero-value-line { margin: 1.25rem 0 0; font-size: .75rem; }
+
+app-home .hero .hero-orb {
+  width: min(560px, 65vw);
+  height: min(560px, 65vw);
+  right: 9%;
+  top: 20%;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(255 125 77 / 25%), rgb(235 95 63 / 10%) 48%, transparent 72%);
+  filter: blur(64px);
+  opacity: .7;
+  pointer-events: none;
+}
+
+@media (min-width: 1081px) {
+  app-home .hero.dark-section { min-height: 740px; padding-block: 114px 72px; }
+}
+
+@media (prefers-reduced-motion: no-preference) and (min-width: 769px) {
+  app-home .hero .hero-product {
+    animation: composition-product-enter .8s .76s ease-out both, hero-device-drift 7s 1.6s ease-in-out infinite;
+  }
+  app-home .hero .product-frame { animation: none; }
+}
+
+@keyframes hero-device-drift {
+  0%, 100% { translate: 0 0; }
+  50% { translate: 3px -6px; }
+}
+
+@media (max-width: 768px) {
+  app-home .hero .hero-copy h1 { font-size: clamp(2.65rem, 9.5vw, 3.5rem); }
+  app-home .hero .hero-orb { opacity: .45; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  app-home .hero .hero-product,
+  app-home .hero .hero-product:hover { transform: none; translate: none; animation: none; opacity: 1; }
+  app-home .hero .product-frame { animation: none; }
+}

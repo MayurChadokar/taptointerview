@@ -1,0 +1,92 @@
+/* Final product-only refinement: framing, depth, lighting, and telemetry. */
+@media (min-width: 1281px) {
+  app-home .hero .hero-product { width: min(800px, 53vw); max-width: none; transform: perspective(1800px) rotateY(-4deg) rotateX(1deg) rotateZ(-.4deg) translateX(38px); }
+  app-home .hero .hero-product:hover { width: min(800px, 53vw); max-width: none; transform: perspective(1800px) rotateY(-2deg) rotateX(.5deg) rotateZ(-.2deg) translateX(38px) translateY(-4px); }
+}
+
+@media (max-width: 1280px) and (min-width: 1081px) {
+  app-home .hero .hero-product { width: min(700px, 53vw); max-width: none; transform: perspective(1700px) rotateY(-3deg) rotateX(.8deg) rotateZ(-.25deg) translateX(30px); }
+  app-home .hero .hero-product:hover { width: min(700px, 53vw); max-width: none; transform: perspective(1700px) rotateY(-1.5deg) rotateX(.4deg) translateX(30px) translateY(-4px); }
+}
+
+@media (max-width: 1080px) {
+  app-home .hero .hero-grid { grid-template-columns: minmax(0, 1fr); }
+  app-home .hero .hero-copy { width: min(760px, 100%); max-width: 760px; }
+  app-home .hero .hero-product { width: min(820px, 88vw); max-width: none; justify-self: center; transform: perspective(1500px) rotateY(-1.5deg) rotateX(.5deg); }
+  app-home .hero .hero-product:hover { width: min(820px, 88vw); max-width: none; justify-self: center; transform: perspective(1500px) rotateY(-.75deg) rotateX(.25deg) translateY(-3px); }
+}
+
+@media (max-width: 430px) {
+  app-home .hero .hero-grid { gap: 3rem; }
+  app-home .hero .hero-product,
+  app-home .hero .hero-product:hover { width: 100%; transform: none; }
+}
+
+app-home .hero .product-frame {
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 42%);
+  border-radius: 20px;
+  box-shadow: 0 45px 100px rgb(0 0 0 / 45%), 0 20px 50px rgb(0 0 0 / 28%), inset 0 1px 0 rgb(255 255 255 / 11%);
+}
+app-home .hero .product-frame app-product-mockup .product-window { border: 0; border-radius: 19px; }
+app-home .hero .product-glow {
+  inset: -16% -18% -18% -10%;
+  opacity: .56;
+  background: radial-gradient(ellipse at center, rgb(235 95 63 / 10%), transparent 68%);
+  filter: blur(115px);
+}
+app-home .hero .hero-product::before {
+  inset: -22% -22% -24% 8%;
+  opacity: .7;
+  background: radial-gradient(ellipse at 64% 46%, rgb(52 84 112 / 12%), transparent 70%);
+  filter: blur(105px);
+}
+app-home .hero .product-reflection {
+  inset: calc(100% + 8px) 10% auto;
+  height: 92px;
+  opacity: .05;
+  background: linear-gradient(to bottom, rgb(222 235 243 / 20%), transparent 76%);
+  filter: blur(18px);
+  transform: scaleY(-1) perspective(600px) rotateX(66deg) scaleX(.9);
+  mask-image: linear-gradient(to bottom, black, transparent 78%);
+}
+
+app-home .hero .queue-badge { top: -24px; right: -26px; }
+app-home .hero .speed-badge { left: -24px; bottom: -30px; }
+app-home .hero .queue-badge .telemetry,
+app-home .hero .speed-badge .telemetry {
+  background: rgb(10 18 29 / 90%);
+  border-color: rgb(255 255 255 / 10%);
+  border-radius: 11px;
+  box-shadow: 0 16px 38px rgb(0 0 0 / 34%);
+}
+app-home .hero .queue-badge .telemetry { width: 178px; min-width: 178px; padding: .72rem .85rem; backdrop-filter: blur(16px); }
+app-home .hero .queue-badge .telemetry div { display: grid; gap: .16rem; }
+app-home .hero .queue-badge .telemetry strong { font-size: .7rem; }
+app-home .hero .queue-badge .telemetry span { color: #aebdc8; font-size: .62rem; }
+app-home .hero .speed-badge .telemetry { position: relative; width: 168px; min-width: 168px; padding: .82rem .9rem .78rem 2.55rem; }
+app-home .hero .speed-badge .telemetry strong { font-size: 1.4rem; }
+
+@media (max-width: 1080px) {
+  app-home .hero .queue-badge { top: -18px; right: -10px; }
+  app-home .hero .speed-badge { left: -10px; bottom: -28px; }
+  app-home .hero .product-glow { opacity: .42; }
+}
+
+@media (max-width: 430px) {
+  app-home .hero .queue-badge { top: -16px; right: -4px; }
+  app-home .hero .speed-badge { left: -4px; bottom: -42px; }
+  app-home .hero .queue-badge .telemetry { width: 158px; min-width: 158px; backdrop-filter: none; }
+  app-home .hero .speed-badge .telemetry { width: 152px; min-width: 152px; }
+  app-home .hero .product-reflection { display: none; }
+}
+
+@media (hover: none), (pointer: coarse) {
+  app-home .hero .hero-product:hover { transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  app-home .hero .hero-product,
+  app-home .hero .hero-product:hover,
+  app-home .hero .product-frame { transform: none; animation: none; }
+}

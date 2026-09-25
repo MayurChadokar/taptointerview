@@ -1,0 +1,23 @@
+/* Prevent the sticky product story from leaving an empty navy viewport. */
+app-scroll-showcase .scroll-stage {
+  height: max(50rem, 138svh);
+}
+
+app-scroll-showcase .sticky-scene {
+  height: 100svh;
+  min-height: 0;
+}
+
+@media (max-height: 760px) and (min-width: 769px) {
+  app-scroll-showcase .scroll-stage { height: 138svh; }
+  app-scroll-showcase .sticky-scene { padding: 3.5rem 1.5rem 1rem; }
+  app-scroll-showcase .story-copy h2 { margin-block: .55rem .4rem; font-size: clamp(2.25rem, 4.2vw, 3.8rem); }
+  app-scroll-showcase .story-copy p { font-size: .88rem; }
+  app-scroll-showcase .perspective-wrap { width: min(720px, 70vw); margin-top: 1.35rem; }
+  app-scroll-showcase .scroll-cue { bottom: 1rem; }
+}
+
+@media (max-width: 768px) {
+  app-scroll-showcase .scroll-stage { height: max(46rem, 132svh); }
+  app-scroll-showcase .sticky-scene { min-height: 0; }
+}

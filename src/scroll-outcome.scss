@@ -1,0 +1,49 @@
+/* Narrative handoff that uses the final scroll-stage space intentionally. */
+app-scroll-showcase .scroll-outcome {
+  position: absolute;
+  inset: auto 1.5rem 4.5rem;
+  z-index: 8;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  pointer-events: none;
+  opacity: var(--scroll-progress);
+}
+
+app-scroll-showcase .scroll-outcome::before {
+  content: '';
+  width: min(520px, 70vw);
+  height: 1px;
+  margin-bottom: 1.5rem;
+  background: linear-gradient(90deg, transparent, rgb(235 95 63 / 55%), transparent);
+}
+
+app-scroll-showcase .scroll-outcome > span {
+  color: #ff7654;
+  font-size: .62rem;
+  font-weight: 800;
+  letter-spacing: .17em;
+}
+
+app-scroll-showcase .scroll-outcome p {
+  margin: .75rem 0 1rem;
+  color: #a9b8c4;
+  font: 650 clamp(1.5rem, 2.7vw, 2.6rem)/1.2 'Manrope', sans-serif;
+  letter-spacing: -.035em;
+}
+
+app-scroll-showcase .scroll-outcome p strong { color: #f5f8fa; font-weight: 750; }
+app-scroll-showcase .scroll-outcome small { display: inline-flex; align-items: center; gap: .55rem; color: #758895; font-size: .68rem; }
+app-scroll-showcase .scroll-outcome small i { width: 7px; height: 7px; background: #eb5f3f; border-radius: 50%; box-shadow: 0 0 0 5px rgb(235 95 63 / 10%); }
+
+@media (max-height: 760px) and (min-width: 769px) {
+  app-scroll-showcase .scroll-outcome { bottom: 2rem; }
+  app-scroll-showcase .scroll-outcome::before { margin-bottom: .85rem; }
+  app-scroll-showcase .scroll-outcome p { margin-block: .45rem .65rem; font-size: clamp(1.35rem, 2.2vw, 2rem); }
+}
+
+@media (max-width: 768px) {
+  app-scroll-showcase .scroll-outcome { inset-inline: 1rem; bottom: 2.5rem; }
+  app-scroll-showcase .scroll-outcome::before { width: 82vw; margin-bottom: 1rem; }
+  app-scroll-showcase .scroll-outcome p { font-size: clamp(1.35rem, 6vw, 2rem); }
+}

@@ -1,0 +1,41 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap');
+
+:root {
+  --navy: #121826;
+  --navy-deep: #06111e;
+  --orange: #eb5f3f;
+  --orange-bright: #ff5a2a;
+  --orange-soft: #fff0eb;
+  --white: #ffffff;
+  --off-white: #faf7f5;
+  --light-gray: #f1f2f4;
+  --charcoal: #20242d;
+  --muted: #69717e;
+  --border: #e4e6e9;
+  --shadow-lg: 0 30px 80px rgb(10 18 30 / 18%);
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; color: var(--charcoal); background: var(--white); font-family: 'DM Sans', Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+button, input, select { font-family: inherit; }
+button, a { -webkit-tap-highlight-color: transparent; }
+button { cursor: pointer; }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible { outline: 3px solid rgb(235 95 63 / 35%); outline-offset: 3px; }
+.shell { width: min(1180px, calc(100% - 3rem)); margin-inline: auto; }
+.section { padding-block: clamp(5rem, 9vw, 8rem); }
+.dark-section { color: var(--white); background: var(--navy-deep); }
+.button { min-height: 50px; display: inline-flex; align-items: center; gap: .75rem; padding: .8rem 1.3rem; color: var(--white); background: linear-gradient(135deg, var(--orange-bright), var(--orange)); border: 1px solid var(--orange); border-radius: 8px; box-shadow: 0 10px 25px rgb(235 95 63 / 20%); text-decoration: none; font-size: .88rem; font-weight: 700; transition: transform .2s ease, box-shadow .2s ease; }
+.button:hover { transform: translateY(-2px); box-shadow: 0 14px 30px rgb(235 95 63 / 28%); }
+.button-small { min-height: 42px; padding: .65rem 1rem; }
+.button-outline { color: inherit; background: transparent; border-color: rgb(235 95 63 / 75%); box-shadow: none; }
+.section-kicker, .eyebrow { display: inline-block; color: var(--orange); font-size: .72rem; font-weight: 800; letter-spacing: .12em; }
+.section-kicker.light { color: #ff8669; }
+.section-heading h2, .position-heading h2 { margin: .8rem 0 1.1rem; color: var(--navy); font: 800 clamp(2.2rem, 4vw, 3.7rem)/1.08 'Manrope', sans-serif; letter-spacing: -.045em; }
+.section-heading p, .position-heading p { max-width: 610px; color: var(--muted); font-size: 1.04rem; line-height: 1.75; }
+.section-heading.centered { max-width: 780px; margin: 0 auto 3.5rem; text-align: center; }
+.section-heading.centered p { margin-inline: auto; }
+[appReveal] { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+[appReveal].is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } [appReveal] { opacity: 1; transform: none; } }
+@media (max-width: 640px) { .shell { width: min(100% - 2rem, 1180px); } .section { padding-block: 4.5rem; } }

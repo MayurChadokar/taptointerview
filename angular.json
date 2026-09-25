@@ -1,0 +1,58 @@
+{
+  "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
+  "version": 1,
+  "cli": {
+    "packageManager": "pnpm",
+    "analytics": "01a2ce46-9afc-4f37-aaea-c6f2416c39f2"
+  },
+  "newProjectRoot": "projects",
+  "projects": {
+    "tap2interview": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": { "style": "scss", "skipTests": true },
+        "@schematics/angular:class": { "skipTests": true },
+        "@schematics/angular:directive": { "skipTests": true },
+        "@schematics/angular:guard": { "skipTests": true },
+        "@schematics/angular:interceptor": { "skipTests": true },
+        "@schematics/angular:pipe": { "skipTests": true },
+        "@schematics/angular:resolver": { "skipTests": true },
+        "@schematics/angular:service": { "skipTests": true }
+      },
+      "root": "",
+      "sourceRoot": "src",
+      "prefix": "app",
+      "architect": {
+        "build": {
+          "builder": "@angular/build:application",
+          "options": {
+            "browser": "src/main.ts",
+            "tsConfig": "tsconfig.app.json",
+            "inlineStyleLanguage": "scss",
+            "assets": [{ "glob": "**/*", "input": "public" }],
+            "styles": ["src/styles.scss", "src/hero-fix.scss", "src/premium-system.scss", "src/dark-encapsulation.scss", "src/visibility-fix.scss", "src/card-contrast-fix.scss", "src/hero-premium.scss", "src/hero-refinement.scss", "src/hero-composition.scss", "src/hero-composition-final.scss", "src/hero-product-refinement.scss", "src/hero-scale-adjustment.scss", "src/hero-device-frame.scss", "src/scroll-space-fix.scss", "src/scroll-outcome.scss", "src/scroll-flow-reset.scss"]
+          },
+          "configurations": {
+            "production": {
+              "budgets": [
+                { "type": "initial", "maximumWarning": "500kB", "maximumError": "1MB" },
+                { "type": "anyComponentStyle", "maximumWarning": "16kB", "maximumError": "22kB" }
+              ],
+              "outputHashing": "all"
+            },
+            "development": { "optimization": false, "extractLicenses": false, "sourceMap": true }
+          },
+          "defaultConfiguration": "production"
+        },
+        "serve": {
+          "builder": "@angular/build:dev-server",
+          "configurations": {
+            "production": { "buildTarget": "tap2interview:build:production" },
+            "development": { "buildTarget": "tap2interview:build:development" }
+          },
+          "defaultConfiguration": "development"
+        }
+      }
+    }
+  }
+}

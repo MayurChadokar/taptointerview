@@ -1,0 +1,40 @@
+@use 'sass:meta';
+
+/* UX correction: remove the oversized sticky-scroll runway entirely. */
+app-scroll-showcase section.scroll-stage {
+  height: auto !important;
+  min-height: 0 !important;
+}
+
+app-scroll-showcase section.scroll-stage > .sticky-scene {
+  position: relative !important;
+  inset: auto !important;
+  height: auto !important;
+  min-height: 0 !important;
+  justify-content: flex-start !important;
+  padding: clamp(4rem, 7vw, 6rem) 1.5rem clamp(4.5rem, 7vw, 6rem) !important;
+  overflow: hidden;
+}
+
+app-scroll-showcase section.scroll-stage .perspective-wrap {
+  margin-bottom: 0 !important;
+}
+
+app-scroll-showcase section.scroll-stage .scroll-outcome,
+app-scroll-showcase section.scroll-stage .scroll-cue {
+  display: none !important;
+}
+
+@media (max-height: 760px) and (min-width: 769px) {
+  app-scroll-showcase section.scroll-stage > .sticky-scene {
+    padding-block: 3.5rem 4rem !important;
+  }
+}
+
+@media (max-width: 768px) {
+  app-scroll-showcase section.scroll-stage > .sticky-scene {
+    padding: 4rem 1rem 5rem !important;
+  }
+}
+
+@include meta.load-css('mobile-responsive');

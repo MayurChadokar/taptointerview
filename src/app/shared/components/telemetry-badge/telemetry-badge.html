@@ -1,0 +1,8 @@
+<div class="telemetry" [class.is-live]="live">
+  @if (live) { <span class="live-dot" aria-hidden="true"></span> }
+  <div>
+    <strong>{{ value }}</strong>
+    <span>{{ label }}</span>
+    @if (detail) { <small>{{ detail }}</small> }
+  </div>
+</div>
