@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnDestroy, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnDestroy, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 const icons: Record<string, string> = {
@@ -35,7 +35,7 @@ interface TeamMember { first: string; last: string; email: string; role: string;
   templateUrl: './product-mockup.html',
   styleUrls: ['./product-mockup.scss', './product-workspace.scss'],
 })
-export class ProductMockup implements OnDestroy {
+export class ProductMockup implements AfterViewInit, OnDestroy {
   @Input() mode: 'queue' | 'waiting-room' = 'queue';
 
   readonly tabs = [
@@ -43,7 +43,24 @@ export class ProductMockup implements OnDestroy {
     { label: 'My Jobs', icon: 'job' }, { label: 'Post Job', icon: 'plus' },
     { label: 'Team', icon: 'people' }, { label: 'Settings', icon: 'settings' }, { label: 'Credits', icon: 'credits' },
   ];
-  private readonly host = inject(ElementRef<HTMLElement>);
+  private readonly host: ElementRef<HTMLElement> = inject(ElementRef);
+  private resizeObserver?: ResizeObserver;
+
+  ngAfterViewInit(): void {
+    const viewport = this.host.nativeElement.querySelector<HTMLElement>('.mock-viewport');
+    const canvas = this.host.nativeElement.querySelector<HTMLElement>('.mock-desktop-canvas');
+    if (!viewport || !canvas || typeof ResizeObserver === 'undefined') return;
+
+    // Measure layout dimensions, unaffected by the marketing frame's transforms.
+    // The desktop canvas owns its container units; only its rendered size changes.
+    const fit = () => {
+      const scale = Math.min(viewport.clientWidth / canvas.offsetWidth, viewport.clientHeight / canvas.offsetHeight);
+      viewport.style.setProperty('--mock-scale', String(Math.max(0, scale)));
+    };
+    fit();
+    this.resizeObserver = new ResizeObserver(fit);
+    this.resizeObserver.observe(viewport);
+  }
   tab = 'My Queue';
   inInterview = true;
   interviewEnded = false;
@@ -185,5 +202,5 @@ export class ProductMockup implements OnDestroy {
   }
   async copyCompanyUrl(): Promise<void> { try { await navigator.clipboard.writeText(this.companyUrl); this.notice.set('Company URL copied.'); } catch { this.notice.set('Copy is unavailable. Select the company URL and copy it manually.'); } }
   async expand(): Promise<void> { try { if (document.fullscreenElement === this.host.nativeElement) await document.exitFullscreen(); else await this.host.nativeElement.requestFullscreen(); } catch { this.notice.set('Fullscreen is unavailable in this browser. You can still use every tab here.'); } }
-  ngOnDestroy(): void { clearInterval(this.ticker); }
+  ngOnDestroy(): void { clearInterval(this.ticker); this.resizeObserver?.disconnect(); }
 }
