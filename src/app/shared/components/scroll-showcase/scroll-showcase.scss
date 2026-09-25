@@ -93,7 +93,7 @@
   position: relative;
   transform-style: preserve-3d;
   transform: perspective(1800px) rotateX(var(--pointer-tilt-x, 0deg)) rotateY(var(--pointer-tilt-y, 0deg));
-  transition: transform .24s ease-out;
+  transition: transform .55s cubic-bezier(.22,.61,.36,1);
 }
 
 @media (hover: none), (pointer: coarse), (prefers-reduced-motion: reduce) {
@@ -150,3 +150,34 @@
   .story-copy { transform: none; }
   .scan-line, .ai-kicker i, .scroll-cue span::after { animation: none; }
 }
+
+// A quiet backdrop and composited motion keep the live demo in focus.
+.showcase-aura {
+  position: absolute;
+  top: 14%;
+  left: 5%;
+  width: 90%;
+  height: 65%;
+  pointer-events: none;
+  opacity: .6;
+  background: radial-gradient(ellipse at 25% 55%, rgb(235 95 63 / 19%), transparent 55%), radial-gradient(ellipse at 75% 40%, rgb(65 141 185 / 18%), transparent 60%);
+}
+.showcase-word { display: inline-block; }
+.showcase-highlights { display: flex; flex-wrap: wrap; justify-content: center; gap: .65rem; margin-top: 1.25rem; }
+.showcase-highlights > span { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem .8rem; border: 1px solid rgb(235 128 93 / 25%); border-radius: 30px; font-size: .68rem; color: inherit; background: rgb(235 128 93 / 5%); }
+.showcase-highlights > span::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: #eb805d; }
+@media (prefers-reduced-motion: no-preference) {
+  .scroll-stage .story-copy.is-visible,
+  .scroll-stage .story-copy.is-visible > h2 { animation: none; }
+  .scroll-stage .story-copy.is-visible > :is(.ai-kicker, p, .showcase-highlights) { animation: showcase-copy-in 1.3s .15s ease-out backwards; }
+  .scroll-stage .story-copy.is-visible > p { animation-delay: .4s; }
+  .scroll-stage .story-copy.is-visible > .showcase-highlights { animation-delay: .65s; }
+  .scroll-stage .story-copy.is-visible .showcase-word { animation: showcase-copy-in 1.45s ease-out backwards; animation-delay: calc(.1s + var(--word-index) * .07s); }
+  .showcase-aura { animation: showcase-breathe 10s ease-in-out infinite alternate; animation-play-state: paused; }
+  .scroll-stage.is-in-view .showcase-aura { animation-play-state: var(--showcase-play-state, running); }
+  .scroll-stage:not(.is-in-view) .ai-kicker i { animation-play-state: paused; }
+  .scroll-stage .product-frame { transition: transform .3s ease-out; }
+}
+@keyframes showcase-copy-in { from { opacity: 0; translate: 0 14px; } to { opacity: 1; translate: 0 0; } }
+@keyframes showcase-breathe { from { opacity: .4; transform: translate3d(-10px, 8px, 0) scale(.98); } to { opacity: .75; transform: translate3d(10px, -8px, 0) scale(1.02); } }
+@media (max-width: 768px) { .showcase-highlights { gap: .4rem; }.showcase-highlights > span { padding: .4rem .6rem; font-size: .6rem; }.scroll-stage .signal { display: none; } }

@@ -47,6 +47,10 @@ nav a:hover, nav a:focus-visible { color: var(--white); }
 nav .login { padding: .7rem 1rem; border: 1px solid rgb(235 95 63 / 65%); border-radius: 8px; }
 nav .button { color: var(--white); }
 .menu-toggle { display: none; }
+.header-inner { gap: .75rem; }
+.brand { order: 0; margin-right: auto; }
+nav { order: 1; gap: clamp(.85rem, 1.6vw, 1.5rem); }
+.menu-toggle { order: 3; flex-shrink: 0; }
 
 @media (max-width: 1080px) {
   .site-header { background: rgb(5 14 25 / 96%); }

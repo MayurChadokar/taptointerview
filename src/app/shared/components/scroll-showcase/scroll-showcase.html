@@ -1,14 +1,16 @@
-<section class="scroll-stage" #scrollStage aria-labelledby="scroll-showcase-title">
-  <div class="ambient-grid"></div>
+<section class="scroll-stage" id="live-demo" #scrollStage aria-labelledby="scroll-showcase-title">
+  <div class="ambient-grid" aria-hidden="true"></div>
+  <div class="showcase-aura" aria-hidden="true"></div>
 
   <div class="sticky-scene">
-    <div class="story-copy">
+    <div class="story-copy" appReveal>
       <span class="ai-kicker"><i></i> A BETTER HIRING DAY</span>
-      <h2 id="scroll-showcase-title">Your hiring day,<br /><em>moving in real time.</em></h2>
+      <h2 id="scroll-showcase-title">@for (word of headingWords; track $index) {<span class="showcase-word" [style.--word-index]="$index">{{ word }}</span>{{ $last ? '' : ' ' }}}<br /><em>@for (word of accentWords; track $index) {<span class="showcase-word" [style.--word-index]="headingWords.length + $index">{{ word }}</span>{{ $last ? '' : ' ' }}}</em></h2>
       <p>One clear view of every qualified candidate&mdash;ready when your recruiters are.</p>
+      <div class="showcase-highlights" aria-label="Product highlights"><span>Live queue</span><span>Qualified candidates</span><span>Ready to interview</span></div>
     </div>
 
-    <div class="perspective-wrap" (pointermove)="onPointerMove($event)" (pointerleave)="resetTilt()" (pointercancel)="resetTilt()">
+    <div class="perspective-wrap" #perspectiveWrap>
       <div class="pointer-tilt" #tiltSurface>
       <div class="product-frame">
         <div class="frame-bar">
@@ -16,7 +18,7 @@
           <span>app.taptointerview.com / live-queue</span>
           <b>LIVE</b>
         </div>
-        <div class="product-canvas"><app-product-mockup mode="waiting-room" /></div>
+        <div class="product-canvas"><app-product-mockup mode="waiting-room" [demoSpeed]="1.7" /></div>
         <div class="frame-edge"></div>
       </div>
 

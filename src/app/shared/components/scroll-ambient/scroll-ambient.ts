@@ -28,7 +28,7 @@ export class ScrollAmbient implements AfterViewInit, OnDestroy {
       const main = page?.querySelector<HTMLElement>('main');
       this.sections = main
         ? Array.from<HTMLElement>(main.querySelectorAll<HTMLElement>('section'))
-          .filter(section => section.parentElement === main || section.parentElement?.parentElement === main)
+          .filter(section => section.parentElement === main || section.parentElement?.parentElement === main || !!section.parentElement?.parentElement?.classList.contains('showcase-handoff'))
         : [];
       this.footer = page?.querySelector<HTMLElement>('footer') ?? undefined;
       this.preference = window.matchMedia('(prefers-reduced-motion: reduce)');

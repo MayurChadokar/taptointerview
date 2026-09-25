@@ -7,18 +7,18 @@
     </header>
 
     <div class="testimonial-layout">
-      <div class="reason-list" appReveal>
-        @for (reason of reasons; track reason.number) {
-          <article>
+      <div class="reason-list" appReveal [appRevealRepeat]="true">
+        @for (reason of reasons; track reason.number; let index = $index) {
+          <article appReveal [appRevealRepeat]="true" [style.--reason-index]="index">
             <span>{{ reason.number }}</span>
             <div><h3>{{ reason.title }}</h3><p>{{ reason.copy }}</p></div>
           </article>
         }
       </div>
 
-      <figure class="employer-quote" appReveal>
+      <figure class="employer-quote" appReveal [appRevealRepeat]="true">
         <div class="quote-mark" aria-hidden="true">&ldquo;</div>
-        <blockquote>Hiring insulators was always a long, expensive process, mostly due to scheduling and no-shows. Tap To Interview lets my team fill roles fast.</blockquote>
+        <blockquote><span class="feedback-typing" appFeedbackTyping><span class="feedback-full" data-typing-source>{{ employerFeedback }}</span><span class="feedback-live" aria-hidden="true"><span data-typing-text></span><i class="feedback-caret"></i></span></span></blockquote>
         <figcaption>
           <span>SEI</span>
           <div><strong>Employer feedback</strong><small>Sun Energy Insulation</small></div>
@@ -26,10 +26,10 @@
       </figure>
     </div>
 
-    <div class="candidate-feedback" appReveal>
+    <div class="candidate-feedback" appReveal [appRevealRepeat]="true">
       <div><span>CANDIDATE FEEDBACK</span><h3>What candidates consistently noticed.</h3></div>
       <ul aria-label="Candidate feedback themes">
-        @for (theme of feedbackThemes; track theme) { <li>{{ theme }}</li> }
+        @for (theme of feedbackThemes; track theme; let index = $index) { <li [style.--theme-index]="index"><span class="feedback-typing" appFeedbackTyping [typingDelay]="200 + index * 140" [typingInterval]="45"><span class="feedback-full" data-typing-source>{{ theme }}</span><span class="feedback-live" aria-hidden="true"><span data-typing-text></span><i class="feedback-caret"></i></span></span></li> }
       </ul>
     </div>
   </div>

@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ElementRef, Input, OnDestroy, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, HostListener, Input, NgZone, OnDestroy, afterNextRender, inject, signal } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 
 const icons: Record<string, string> = {
@@ -37,6 +37,8 @@ interface TeamMember { first: string; last: string; email: string; role: string;
 })
 export class ProductMockup implements AfterViewInit, OnDestroy {
   @Input() mode: 'queue' | 'waiting-room' = 'queue';
+  @Input() demoSpeed = 1;
+  protected get playbackRate(): number { return Number.isFinite(this.demoSpeed) ? Math.min(3, Math.max(.5, this.demoSpeed)) : 1; }
 
   readonly tabs = [
     { label: 'Dashboard', icon: 'dashboard' }, { label: 'My Queue', icon: 'people' },
@@ -44,9 +46,125 @@ export class ProductMockup implements AfterViewInit, OnDestroy {
     { label: 'Team', icon: 'people' }, { label: 'Settings', icon: 'settings' }, { label: 'Credits', icon: 'credits' },
   ];
   private readonly host: ElementRef<HTMLElement> = inject(ElementRef);
+  private readonly zone = inject(NgZone);
   private resizeObserver?: ResizeObserver;
+  private visibilityObserver?: IntersectionObserver;
+  private demoTimer?: ReturnType<typeof setInterval>;
+  private demoVisible = false;
+  private demoFrame = 0;
+  private demoFrameCredit = 0;
+  private motionPreference?: MediaQueryList;
+  readonly autoDemo = signal(false);
+  readonly demoCursor = signal({ x: 380, y: 180, clicking: false });
+  private readonly onMotionChange = () => { if (this.motionPreference?.matches) this.stopAutoDemo(); };
+
+  constructor() {
+    afterNextRender(() => this.playAutoDemo());
+  }
+
+  @HostListener('pointerdown')
+  @HostListener('keydown')
+  stopAutoDemo(): void {
+    this.autoDemo.set(false);
+    clearInterval(this.demoTimer);
+  }
+
+  playAutoDemo(): void {
+    if (this.motionPreference?.matches) return;
+    this.stopAutoDemo();
+    this.loggedOut = false;
+    this.startDemo();
+    this.chatOpen = false;
+    this.demoFrame = 0;
+    this.demoFrameCredit = 0;
+    this.autoDemo.set(true);
+    this.zone.runOutsideAngular(() => {
+      this.demoTimer = setInterval(() => {
+        if (!this.demoVisible || document.hidden || this.host.nativeElement.closest('[inert]')) return;
+        // Keep the existing tick frequency and visit every scripted action in order.
+        this.demoFrameCredit += this.playbackRate;
+        if (this.demoFrameCredit < 1) return;
+        this.zone.run(() => {
+          while (this.demoFrameCredit >= 1) {
+            this.advanceDemo();
+            this.demoFrameCredit--;
+          }
+        });
+      }, 80);
+    });
+  }
+
+  private pointAt(selector: string, clicking = false): void {
+    const target = this.host.nativeElement.querySelector<HTMLElement>(selector);
+    const canvas = this.host.nativeElement.querySelector<HTMLElement>('.mock-desktop-canvas');
+    if (!target || !canvas) return;
+    let x = target.offsetWidth * .45;
+    let y = target.offsetHeight * .5;
+    let element: HTMLElement | null = target;
+    while (element && element !== canvas) {
+      x += element.offsetLeft;
+      y += element.offsetTop;
+      element = element.offsetParent as HTMLElement | null;
+    }
+    for (let parent = target.parentElement; parent && parent !== canvas; parent = parent.parentElement) {
+      x -= parent.scrollLeft;
+      y -= parent.scrollTop;
+    }
+    this.demoCursor.set({ x, y, clicking });
+  }
+
+  private advanceDemo(): void {
+    const tourFrame = this.demoFrame++;
+    const framesPerTab = 40;
+    const tourEnd = this.tabs.length * framesPerTab;
+    if (tourFrame < tourEnd) {
+      const item = this.tabs[Math.floor(tourFrame / framesPerTab)];
+      const phase = tourFrame % framesPerTab;
+      const selector = `.side-link[aria-label="${item.label}"]`;
+      if (phase === 0) this.pointAt(selector);
+      if (phase === 12) {
+        this.pointAt(selector, true);
+        this.navigate(item.label);
+      }
+      if (phase === 18) this.pointAt(selector);
+      return;
+    }
+    // Return to the interview before continuing the typing and candidate demo.
+    if (tourFrame === tourEnd) this.pointAt('.side-link[aria-label="My Queue"]');
+    if (tourFrame === tourEnd + 12) {
+      this.pointAt('.side-link[aria-label="My Queue"]', true);
+      this.navigate('My Queue');
+    }
+    if (tourFrame < tourEnd + 20) return;
+    const frame = tourFrame - tourEnd - 20;
+    const copy = this.mode === 'waiting-room'
+      ? 'Strong communication. Ready for afternoon shifts. Recommend the next round.'
+      : 'Two years of warehouse experience. Available next week. Great fit for the team.';
+    if (frame === 8) this.pointAt('.notes-card textarea');
+    if (frame === 20) { this.pointAt('.notes-card textarea', true); this.notes = ''; }
+    if (frame >= 24 && frame < 24 + copy.length) {
+      this.notes = copy.slice(0, frame - 23);
+      this.pointAt('.notes-card textarea');
+    }
+    const end = 24 + copy.length;
+    if (frame === end + 10) this.pointAt('.notes-card button');
+    if (frame === end + 22) { this.pointAt('.notes-card button', true); this.saveNotes(); }
+    if (frame === end + 28) this.pointAt('.notes-card button');
+    if (frame === end + 46) { this.notice.set(''); this.pointAt('.waiting-person button'); }
+    if (frame === end + 60) { this.pointAt('.waiting-person button', true); this.selected = this.waiting[0]; }
+    if (frame === end + 68) this.pointAt('.application-panel .full');
+    if (frame === end + 105) { this.pointAt('.application-panel .full', true); }
+    if (frame === end + 110) { this.selected = null; this.pointAt('.notes-card textarea'); }
+    if (frame === end + 140) this.demoFrame = 0;
+  }
 
   ngAfterViewInit(): void {
+    this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+    this.motionPreference.addEventListener('change', this.onMotionChange);
+    this.visibilityObserver = new IntersectionObserver(entries => {
+      this.demoVisible = entries[0].isIntersecting;
+    }, { threshold: .2 });
+    this.visibilityObserver.observe(this.host.nativeElement);
     const viewport = this.host.nativeElement.querySelector<HTMLElement>('.mock-viewport');
     const canvas = this.host.nativeElement.querySelector<HTMLElement>('.mock-desktop-canvas');
     if (!viewport || !canvas || typeof ResizeObserver === 'undefined') return;
@@ -202,5 +320,11 @@ export class ProductMockup implements AfterViewInit, OnDestroy {
   }
   async copyCompanyUrl(): Promise<void> { try { await navigator.clipboard.writeText(this.companyUrl); this.notice.set('Company URL copied.'); } catch { this.notice.set('Copy is unavailable. Select the company URL and copy it manually.'); } }
   async expand(): Promise<void> { try { if (document.fullscreenElement === this.host.nativeElement) await document.exitFullscreen(); else await this.host.nativeElement.requestFullscreen(); } catch { this.notice.set('Fullscreen is unavailable in this browser. You can still use every tab here.'); } }
-  ngOnDestroy(): void { clearInterval(this.ticker); this.resizeObserver?.disconnect(); }
+  ngOnDestroy(): void {
+    clearInterval(this.ticker);
+    this.stopAutoDemo();
+    this.resizeObserver?.disconnect();
+    this.visibilityObserver?.disconnect();
+    this.motionPreference?.removeEventListener('change', this.onMotionChange);
+  }
 }

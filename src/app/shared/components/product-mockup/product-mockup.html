@@ -1,5 +1,11 @@
 <div class="mock-viewport">
 <div class="mock-desktop-canvas">
+@if (autoDemo()) {
+  <div class="demo-cursor" aria-hidden="true" [class.is-clicking]="demoCursor().clicking" [style.--demo-cursor-duration]="(0.85 / playbackRate) + 's'" [style.transform]="'translate3d(' + demoCursor().x + 'px, ' + demoCursor().y + 'px, 0)'">
+    <svg viewBox="0 0 28 32"><path d="M3 2v23l6-6 5 11 5-2-5-10h9Z" fill="#ff512b" stroke="white" stroke-width="2" stroke-linejoin="round" /></svg>
+    <span>Live demo</span>
+  </div>
+}
 <div class="product-window" [attr.data-mode]="mode">
   <aside class="mock-sidebar">
     <div class="mini-brand">TAP TO <b>INTERVIEW</b></div>
@@ -125,4 +131,4 @@
 </div>
 </div>
 </div>
-<div class="showcase-tools"><span>Interactive product showcase</span><button type="button" (click)="expand()">Expand / exit showcase ↗</button></div>
+<div class="showcase-tools"><span>Interactive product showcase</span><button class="demo-playback" type="button" (pointerdown)="$event.stopPropagation()" (keydown)="$event.stopPropagation()" (click)="autoDemo() ? stopAutoDemo() : playAutoDemo()">{{ autoDemo() ? 'Pause auto demo' : 'Replay auto demo' }}</button><button type="button" (click)="expand()">Expand / exit showcase ↗</button></div>

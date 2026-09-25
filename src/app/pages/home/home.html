@@ -1,5 +1,6 @@
 <app-header />
 <app-scroll-ambient />
+<app-page-scroll-controls />
 
 <main id="top">
   <section class="hero dark-section" aria-labelledby="hero-title" (pointermove)="moveHeroLight($event)" (pointerleave)="resetHeroLight($event)">
@@ -7,18 +8,28 @@
     <div class="shell hero-grid">
       <div class="hero-copy">
         <span class="eyebrow"><i aria-hidden="true"></i> WALK-IN INTERVIEWS. ONLINE.</span>
-        <h1 id="hero-title"><span class="headline-primary">Stop Scheduling Interviews.</span><em>Start Interviewing.</em></h1>
-        <h2>Turn candidate interest into live conversations.</h2>
+        <h1 id="hero-title">
+          <span class="headline-primary">
+            <span class="hero-word-window"><span class="hero-word" style="--word: 0">Stop</span></span>{{ ' ' }}
+            <span class="hero-word-window"><span class="hero-word" style="--word: 1">Scheduling</span></span>{{ ' ' }}
+            <span class="hero-word-window"><span class="hero-word" style="--word: 2">Interviews.</span></span>
+          </span>{{ ' ' }}
+          <em>
+            <span class="hero-word-window"><span class="hero-word" style="--word: 3">Start</span></span>{{ ' ' }}
+            <span class="hero-word-window"><span class="hero-word" style="--word: 4">Interviewing.</span></span>
+          </em>
+        </h1>
+        <h2><span>Turn candidate interest into live conversations.</span></h2>
         <p>Tap To Interview helps staffing firms and high-volume employers move qualified candidates from interest to a live interview&mdash;without scheduling delays, resume pileups, and endless back-and-forth.</p>
         <div class="hero-actions">
           <a class="button" href="#request-demo">Request A Demo <span>&rarr;</span></a>
-          <a class="button button-outline" href="#how-it-works"><span class="play">&#9654;</span> See How It Works</a>
+          <a class="button button-outline" href="#live-demo"><span class="play">&#9654;</span> See How It Works</a>
         </div>
         <p class="hero-value-line"><span aria-hidden="true"></span> Live interviews without calendar back-and-forth.</p>
       </div>
       <div class="hero-product">
         <div class="product-glow" aria-hidden="true"></div>
-        <div class="product-frame"><app-product-mockup /></div>
+        <div class="product-frame"><app-product-mockup [demoSpeed]="3" /></div>
         <app-telemetry-badge class="queue-badge" value="LIVE QUEUE" label="12 waiting" [live]="true" />
         <app-telemetry-badge class="speed-badge" value="5.5" label="Interviews / hour" detail="Up 18% this week" />
         <div class="product-reflection" aria-hidden="true"></div>
@@ -28,13 +39,17 @@
 
   <section class="problem section" id="why-tti">
     <div class="shell">
-      <div class="problem-grid" appReveal>
-        <div><span class="section-kicker">WHY TAP TO INTERVIEW</span><h2>Hiring slows down when scheduling gets in the way.</h2><p>When candidates have to wait days for an interview, momentum is lost. Tap To Interview connects with qualified candidates while interest is high.</p></div>
+      <div class="problem-grid">
+        <div class="problem-copy" appReveal="left" [appRevealRepeat]="true">
+          <span class="section-kicker">WHY TAP TO INTERVIEW</span>
+          <h2>@for (word of problemHeadlineWords; track $index) {<span class="problem-word" [style.--word-index]="$index">{{ word }}</span>{{ $last ? '' : ' ' }}}</h2>
+          <p>When candidates have to wait days for an interview, momentum is lost. Tap To Interview connects with qualified candidates while interest is high.</p>
+        </div>
         <div class="benefit-grid">
-          @for (benefit of benefits; track benefit.title) { <article><span class="line-icon">{{ benefit.icon === 'clock' ? '01' : benefit.icon === 'people' ? '02' : benefit.icon === 'bolt' ? '03' : '04' }}</span><h3>{{ benefit.title }}</h3><p>{{ benefit.description }}</p></article> }
+          @for (benefit of benefits; track benefit.title; let index = $index) { <article appReveal [appRevealRepeat]="true" [style.--benefit-index]="index"><span class="line-icon">{{ benefit.icon === 'clock' ? '01' : benefit.icon === 'people' ? '02' : benefit.icon === 'bolt' ? '03' : '04' }}</span><h3>{{ benefit.title }}</h3><p>{{ benefit.description }}</p></article> }
         </div>
       </div>
-      <div class="path-comparison" appReveal>
+      <div class="path-comparison" appReveal [appRevealRepeat]="true">
         <div class="path muted"><b>THE OLD WAY</b><span>Apply</span><i>&rarr;</i><span>Review</span><i>&rarr;</i><span>Call</span><i>&rarr;</i><span>Schedule</span><i>&rarr;</i><span>Wait</span><i>&rarr;</i><span>No-Show</span></div>
         <div class="path fast"><b>THE TTI WAY</b><span>Click</span><i>&rarr;</i><span>Qualify</span><i>&rarr;</i><span>Wait</span><i>&rarr;</i><span>Interview</span></div>
       </div>
@@ -42,37 +57,24 @@
   </section>
 
   <app-workflow-showcase />
-  <app-scroll-showcase />
+  <div class="showcase-handoff" appSectionHandoff>
+    <app-scroll-showcase />
+    <app-channel-section />
+  </div>
 
-  <section class="fits section" id="where-it-fits">
-    <div class="shell fits-grid">
-      <div class="section-heading" appReveal><span class="section-kicker">WHERE IT FITS</span><h2>Put your link where candidates are.</h2><p>Tap To Interview works with the channels you already use. If you can share a link, you can create an interview channel.</p><div class="link-chip"><span>&nearr;</span> taptointerview.com/your-company</div></div>
-      <div class="channels" appReveal>
-        @for (channel of channels; track channel; let index = $index) { <article><span>{{ index + 1 < 10 ? '0' + (index + 1) : index + 1 }}</span><h3>{{ channel }}</h3><i>&nearr;</i></article> }
-      </div>
-    </div>
-  </section>
-
-  <section class="results dark-section section" id="results">
-    <div class="shell">
-      <div class="section-heading centered light-heading" appReveal><span class="section-kicker light">DOCUMENTED FIELD RESULTS</span><h2>Real results from real hiring days.</h2><p>Results shown are from individual field tests and are not a guarantee of future performance.</p></div>
-      <div class="result-panels">
-        <article class="result-panel" appReveal><header><span>01</span><div><small>RECENT LIVE TEST</small><h3>More interviews in less recruiter time.</h3></div></header><div class="metric-grid">@for (metric of liveTestMetrics; track metric.label) { <div><b>{{ metric.value }}</b><span>{{ metric.label }}</span></div> }</div></article>
-        <article class="result-panel featured" appReveal><header><span>02</span><div><small>HIRING-DAY CASE STUDY</small><h3>A live hiring session built for volume.</h3></div></header><div class="metric-grid case-grid">@for (metric of caseStudyMetrics; track metric.label) { <div><b>{{ metric.value }}</b><span>{{ metric.label }}</span></div> }</div><a href="#request-demo" class="button button-outline">View Case Study <span>&rarr;</span></a></article>
-      </div>
-    </div>
-  </section>
+  <app-results-section />
 
   <app-testimonials />
 
   <section class="positioning section">
+    <div class="product-watermark" aria-hidden="true"><img src="product-watermark.svg" alt="" width="1200" height="680" loading="lazy"></div>
     <div class="shell">
       <div class="position-heading" appReveal><h2>We're not replacing your hiring stack.<br /><em>We're making interviewing faster.</em></h2><p>You find the candidates. You manage the hires. We help you interview them faster.</p></div>
-      <div class="position-grid" appReveal>
-        <article><span>01</span><h3>Not an ATS.</h3><p>Funnel candidates and hires where you already do.</p></article>
-        <article><span>02</span><h3>Not a job board.</h3><p>Keep using the channels already bringing you candidates.</p></article>
-        <article><span>03</span><h3>Not another scheduling tool.</h3><p>Eliminate more scheduling&mdash;not add another calendar.</p></article>
-        <aside><span class="line-icon">TTI</span><h3>A faster way to interview qualified applicants.</h3></aside>
+      <div class="position-grid" appCardRollReveal>
+        <div class="position-card-slot"><article><span>01</span><h3>Not an ATS.</h3><p>Funnel candidates and hires where you already do.</p></article></div>
+        <div class="position-card-slot"><article><span>02</span><h3>Not a job board.</h3><p>Keep using the channels already bringing you candidates.</p></article></div>
+        <div class="position-card-slot"><article><span>03</span><h3>Not another scheduling tool.</h3><p>Eliminate more scheduling&mdash;not add another calendar.</p></article></div>
+        <div class="position-card-slot"><aside><span class="line-icon">TTI</span><h3>A faster way to interview qualified applicants.</h3></aside></div>
       </div>
     </div>
   </section>
@@ -81,15 +83,23 @@
 
   <section class="demo section" id="request-demo">
     <div class="shell demo-grid">
-      <div class="demo-copy" appReveal><span class="section-kicker light">EXPERIENCE IT YOURSELF</span><h2>See how easy the candidate experience can be.</h2><p>Request a demo and experience Tap To Interview the same way a candidate would&mdash;from click to waiting room.</p><div class="demo-points"><span>&#10003; No scheduling required</span><span>&#10003; Personalized walkthrough</span><span>&#10003; Built around your workflow</span></div></div>
-      <div class="form-card" appReveal><h3>Request your demo</h3><p>Tell us a little about your hiring team.</p><app-demo-form /></div>
+      <div class="demo-reveal" appReveal="left" [appRevealRepeat]="true">
+        <div class="demo-copy"><span class="section-kicker light">EXPERIENCE IT YOURSELF</span><h2>See how easy the candidate experience can be.</h2><p>Request a demo and experience Tap To Interview the same way a candidate would&mdash;from click to waiting room.</p><div class="demo-points"><span>&#10003; No scheduling required</span><span>&#10003; Personalized walkthrough</span><span>&#10003; Built around your workflow</span></div></div>
+      </div>
+      <div class="demo-reveal" appReveal="right" [appRevealRepeat]="true">
+        <div class="form-card"><h3>Request your demo</h3><p>Tell us a little about your hiring team.</p><app-demo-form /></div>
+      </div>
     </div>
   </section>
 
-  <section class="final-cta dark-section"><div class="shell final-inner" appReveal><div><h2>Your next hire could be ready to interview <em>today.</em></h2><p>Spend less time scheduling and more time interviewing.</p></div><a class="button" href="#request-demo">Request A Demo <span>&rarr;</span></a></div></section>
+  <div class="closing-stage" [appFooterReveal]="siteFooter">
+    <section class="final-cta dark-section"><div class="shell final-inner"><div><h2>Your next hire could be ready to interview <em>today.</em></h2><p>Spend less time scheduling and more time interviewing.</p></div><a class="button" href="#request-demo">Request A Demo <span>&rarr;</span></a></div></section>
+  </div>
 </main>
 
-<footer>
-  <div class="shell footer-main"><a class="footer-brand" href="#top"><b>TAP TO <em>INTERVIEW</em></b><span>Walk-in Interviews. Online.</span></a><nav aria-label="Footer navigation"><a href="#why-tti">Why TTI</a><a href="#where-it-fits">Where It Fits</a><a href="#results">Results</a><a href="#pricing">Pricing</a><a href="#request-demo">Request A Demo</a><a href="https://app.taptointerview.com">Log In</a></nav></div>
-  <div class="shell footer-bottom"><span>&copy; {{ currentYear }} Tap To Interview. All rights reserved.</span><span>Privacy &middot; Terms &amp; Conditions &middot; Refund Policy</span><span>Patent Pending &middot; Powered by Tap to Connect, Inc.</span></div>
+<footer #siteFooter>
+  <div class="footer-reveal-content">
+    <div class="shell footer-main"><a class="footer-brand" href="#top"><b>TAP TO <em>INTERVIEW</em></b><span>Walk-in Interviews. Online.</span></a><nav aria-label="Footer navigation"><a href="#why-tti">Why TTI</a><a href="#where-it-fits">Where It Fits</a><a href="#results">Results</a><a href="#pricing">Pricing</a><a href="#request-demo">Request A Demo</a><a href="https://app.taptointerview.com">Log In</a></nav></div>
+    <div class="shell footer-bottom"><span>&copy; {{ currentYear }} Tap To Interview. All rights reserved.</span><span>Privacy &middot; Terms &amp; Conditions &middot; Refund Policy</span><span>Patent Pending &middot; Powered by Tap to Connect, Inc.</span></div>
+  </div>
 </footer>

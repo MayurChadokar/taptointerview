@@ -35,7 +35,7 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 .section-heading p, .position-heading p { max-width: 610px; color: var(--muted); font-size: 1.04rem; line-height: 1.75; }
 .section-heading.centered { max-width: 780px; margin: 0 auto 3.5rem; text-align: center; }
 .section-heading.centered p { margin-inline: auto; }
-[appReveal] { opacity: 0; transform: translateY(24px); transition: opacity .7s ease, transform .7s cubic-bezier(.2,.7,.2,1); }
+[appReveal] { opacity: 1; transform: none; }
 [appReveal].is-visible { opacity: 1; transform: none; }
 @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; } [appReveal] { opacity: 1; transform: none; } }
 @media (max-width: 640px) { .shell { width: min(100% - 2rem, 1180px); } .section { padding-block: 4.5rem; } }

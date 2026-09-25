@@ -1,0 +1,37 @@
+<section class="results section evidence-section" id="results" aria-labelledby="results-heading">
+  <div class="evidence-grid-backdrop" aria-hidden="true"></div>
+  <div class="evidence-shell">
+    <header class="evidence-heading" appReveal [appRevealRepeat]="true">
+      <div>
+        <span class="evidence-kicker"><i aria-hidden="true"></i> DOCUMENTED FIELD RESULTS</span>
+        <h2 id="results-heading"><span class="evidence-title-line"><span>Real results from</span></span><span class="evidence-title-line"><span>real hiring days.</span></span></h2>
+      </div>
+      <p>Results shown are from individual field tests and are not a guarantee of future performance.</p>
+    </header>
+
+    <div class="evidence-panels">
+      @for (study of studies; track study.number; let studyIndex = $index) {
+        <div class="evidence-frame" appReveal [appRevealRepeat]="true" [class.is-featured]="study.featured" [style.--study-index]="studyIndex" [style.--entry-angle]="study.featured ? '-6deg' : '6deg'">
+          <article class="evidence-card" [attr.aria-labelledby]="'study-heading-' + study.number">
+            <header class="evidence-card-heading">
+              <span class="evidence-index" aria-hidden="true">{{ study.number }}</span>
+              <div><span class="evidence-study-label">{{ study.label }}</span><h3 [id]="'study-heading-' + study.number">{{ study.title }}</h3></div>
+              <svg class="evidence-card-symbol" aria-hidden="true" viewBox="0 0 28 28" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"><path d="M4 23h20M7 18v-5m7 5V8m7 10V4" /></svg>
+            </header>
+            <div class="evidence-metrics">
+              @for (metric of study.metrics; track metric.label; let metricIndex = $index) {
+                <dl class="evidence-metric" [style.--metric-index]="metricIndex">
+                  <dt>{{ metric.label }}</dt>
+                  <dd><span class="evidence-sr-only">{{ metric.value }}</span><span class="evidence-number" aria-hidden="true">@for (digit of metric.digits; track $index; let digitIndex = $index) {@if (digit.turns !== null) {<span class="evidence-digit" [style.--digit-turns]="digit.turns" [style.--digit-index]="digitIndex"><span class="evidence-wheel">@for (number of digit.reel; track $index) {<span>{{ number }}</span>}</span></span>} @else {<span>{{ digit.character }}</span>}}</span></dd>
+                </dl>
+              }
+              @if (study.featured) {
+                <a class="evidence-action" href="#request-demo"><span aria-hidden="true">&nearr;</span><strong>View Case Study</strong></a>
+              }
+            </div>
+          </article>
+        </div>
+      }
+    </div>
+  </div>
+</section>

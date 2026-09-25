@@ -1,4 +1,116 @@
-:host { display: block; }
+:host { display: block; --workflow-card: #0d1b28; --workflow-active-card: #24202a; }
+:host-context([data-theme='light']) { --workflow-card: #ffffff; --workflow-active-card: #fff2e8; }
+// A bounded backdrop keeps the scroll journey inside this section.
+.workflow.workflow {
+  position: relative;
+  isolation: isolate;
+  overflow: clip;
+  padding-block: clamp(2rem, 3.5vw, 3.5rem) clamp(3rem, 5vw, 4rem);
+  --workflow-ease: cubic-bezier(.25,.46,.45,.94);
+}
+.workflow > .shell { position: relative; z-index: 1; }
+.workflow .workflow-heading { margin-bottom: clamp(1.75rem, 3vw, 2.5rem); }
+.workflow .workflow-layout { align-items: start; }
+.workflow-watermark {
+  position: absolute;
+  z-index: 0;
+  top: 0;
+  left: -7%;
+  width: min(1050px, 85%);
+  opacity: .2;
+  pointer-events: none;
+  user-select: none;
+  transform: translateY(48px) rotate(-7deg);
+  mask-image: linear-gradient(90deg, #000 55%, transparent 100%);
+}
+.workflow-watermark img { display: block; width: 100%; height: auto; }
+.workflow.workflow .workflow-steps button { background: var(--workflow-card); }
+.workflow.workflow .workflow-steps button.active { background: var(--workflow-active-card); }
+.stage-stack { display: grid; }
+.workflow .stage-stack > .stage-panel {
+  grid-area: 1 / 1;
+  min-width: 0;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  animation: none;
+}
+.workflow .stage-stack > .stage-panel.is-active { opacity: 1; visibility: visible; pointer-events: auto; }
+.workflow-word { display: inline-block; }
+.workflow .step-caption { visibility: hidden; opacity: 0; }
+.workflow .active .step-caption { visibility: visible; opacity: 1; }
+.workflow .workflow-product::after {
+  content: '';
+  position: absolute;
+  inset: 48px 0 auto;
+  height: 2px;
+  z-index: 2;
+  pointer-events: none;
+  background: linear-gradient(90deg, #e85d3a, #ffb18c);
+  transform-origin: left;
+  transform: scaleX(var(--active-progress, .25));
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .workflow .workflow-heading [appReveal].is-visible { animation: none; }
+  .workflow .workflow-heading [appReveal].is-visible > h2 { animation: none; }
+  .workflow .workflow-heading .is-visible .workflow-word {
+    animation: workflow-text-in 1.7s var(--workflow-ease) backwards;
+    animation-delay: calc(.15s + var(--word-index) * .09s);
+  }
+  .workflow .workflow-heading .is-visible > .workflow-kicker,
+  .workflow .workflow-heading > p.is-visible > span {
+    display: inline-block;
+    animation: workflow-text-in 1.6s var(--workflow-ease) backwards;
+  }
+  .workflow .workflow-heading > p.is-visible > span { animation-delay: .45s; }
+  .workflow .workflow-steps button.is-visible {
+    animation: workflow-panel-in 1.6s var(--workflow-ease) backwards;
+    animation-delay: calc(var(--step-index) * .16s);
+  }
+  .workflow .workflow-steps button.is-visible > .reveal-piece:not(i) {
+    animation: workflow-text-in 1.5s var(--workflow-ease) backwards;
+    animation-delay: calc(.2s + var(--step-index) * .16s + var(--reveal-delay, 0ms));
+  }
+  .workflow .workflow-steps button.is-visible > i { animation: none; }
+  .workflow .workflow-product.is-visible { animation: workflow-panel-in 1.8s .15s var(--workflow-ease) backwards; }
+  .workflow .workflow-product.is-visible > .reveal-piece { animation: none; }
+  .workflow .stage-stack > .stage-panel {
+    transition: opacity .5s ease-out, visibility 0s .5s;
+  }
+  .workflow .stage-stack > .stage-panel.is-active {
+    transition: opacity 1.15s .51s var(--workflow-ease), visibility 0s;
+  }
+  .workflow .workflow-steps button > span {
+    transition: scale .9s var(--workflow-ease), box-shadow .9s ease;
+  }
+  .workflow .workflow-steps button.active > span {
+    scale: 1.06;
+    box-shadow: 0 0 0 4px rgb(244 119 85 / 12%), 0 0 20px rgb(244 119 85 / 16%);
+  }
+  .workflow.workflow .workflow-steps button { transition: color .65s ease, background .65s ease, box-shadow .65s ease, padding-left .65s ease, translate .9s var(--workflow-ease); }
+  .workflow .workflow-product::after { transition: transform 1.5s var(--workflow-ease); }
+  .workflow .step-caption { transition: opacity .7s ease; }
+  .workflow .workflow-steps button::before { transition: right .8s var(--workflow-ease); }
+  .workflow .workflow-steps button > i { transition: opacity .7s ease, transform .7s ease; }
+  .workflow .flow-rail span, .workflow .flow-rail i { transition: color 1.5s ease, background 1.5s ease, border-color 1.5s ease, box-shadow 1.5s ease, scale 1.5s var(--workflow-ease); }
+  .workflow .flow-rail .current i { scale: 1.08; }
+  .workflow .flow-rail span::before { transition: background 1.5s ease; }
+}
+@keyframes workflow-text-in {
+  from { opacity: 0; translate: 0 16px; }
+  to { opacity: 1; translate: 0 0; }
+}
+@keyframes workflow-panel-in {
+  from { translate: 0 28px; scale: .985; }
+  to { translate: 0 0; scale: 1; }
+}
+@media (max-width: 768px) {
+  .workflow-watermark { left: -18%; width: 112%; opacity: .19; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .workflow-watermark { transform: translateY(48px) !important; }
+}
 .workflow { padding: clamp(5.5rem, 9vw, 8rem) 0; color: #18212d; background: #f7f4ef; }
 .shell { width: min(1180px, calc(100% - 3rem)); margin-inline: auto; }
 .workflow-heading { display: flex; align-items: end; justify-content: space-between; gap: 4rem; margin-bottom: 3.5rem; }

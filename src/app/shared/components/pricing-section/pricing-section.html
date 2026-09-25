@@ -1,27 +1,32 @@
 <section class="pricing" id="pricing" aria-labelledby="pricing-title">
   <div class="pricing-grid"></div>
   <div class="shell">
-    <header>
-      <span>SIMPLE, USAGE-BASED PRICING</span>
-      <h2 id="pricing-title">Start free. Pay only<br />when you <em>keep interviewing.</em></h2>
-      <p>Your first 10 interviews are on us. No long-term contracts and no hidden platform fee.</p>
+    <header class="pricing-heading">
+      <span class="pricing-kicker">SIMPLE, USAGE-BASED PRICING</span>
+      <h2 id="pricing-title"><span class="pricing-word">Start</span>{{ ' ' }}<span class="pricing-word">free.</span>{{ ' ' }}<span class="pricing-word">Pay</span>{{ ' ' }}<span class="pricing-word">only</span><br /><span class="pricing-word">when</span>{{ ' ' }}<span class="pricing-word">you</span>{{ ' ' }}<em><span class="pricing-word">keep</span>{{ ' ' }}<span class="pricing-word">interviewing.</span></em></h2>
+      <p class="pricing-description">Your first 10 interviews are on us. No long-term contracts and no hidden platform fee.</p>
     </header>
 
     <div class="pricing-frame">
       <i class="corner top-left">+</i><i class="corner top-right">+</i><i class="corner bottom-left">+</i><i class="corner bottom-right">+</i>
       <div class="plans">
         @for (plan of plans; track plan.interviews) {
-          <article [class.featured]="plan.featured">
-            @if (plan.featured) { <small>MOST POPULAR</small> }
-            <span>{{ plan.interviews }}</span>
-            <strong>{{ plan.price }}</strong>
-            <p>One-time interview package</p>
-            <ul><li>Interview credits included</li><li>No long-term contract</li><li>Pay for what you use</li></ul>
-            <a href="#request-demo">Choose package <b>&rarr;</b></a>
-          </article>
+          <div class="plan-entry">
+            <article [class.featured]="plan.featured">
+              @if (plan.featured) { <small>MOST POPULAR</small> }
+              <span>{{ plan.interviews }}</span>
+              <strong>{{ plan.price }}</strong>
+              <p>One-time interview package</p>
+              <ul><li>Interview credits included</li><li>No long-term contract</li><li>Pay for what you use</li></ul>
+              <a href="#request-demo">Choose Package <b aria-hidden="true">&rarr;</b></a>
+            </article>
+          </div>
         }
       </div>
       <div class="pricing-trust"><span>&#10003;</span> Start with 10 free interviews before choosing a package.</div>
+    </div>
+    <div class="pricing-action">
+      <a class="button" href="#request-demo">Request A Demo <span aria-hidden="true">&rarr;</span></a>
     </div>
   </div>
 </section>

@@ -1,8 +1,9 @@
-import { AfterViewInit, Component, ElementRef, HostListener, OnDestroy, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, ElementRef, NgZone, OnDestroy, ViewChild, inject } from '@angular/core';
 import { ProductMockup } from '../product-mockup/product-mockup';
+import { RevealDirective } from '../../directives/reveal.directive';
 
 @Component({
-  imports: [ProductMockup],
+  imports: [ProductMockup, RevealDirective],
   selector: 'app-scroll-showcase',
   templateUrl: './scroll-showcase.html',
   styleUrl: './scroll-showcase.scss',
@@ -11,59 +12,91 @@ export class ScrollShowcase implements AfterViewInit, OnDestroy {
   @ViewChild('scrollStage', { static: true }) private readonly scrollStage!: ElementRef<HTMLElement>;
   private frameId?: number;
   @ViewChild('tiltSurface', { static: true }) private readonly tiltSurface!: ElementRef<HTMLElement>;
+  @ViewChild('perspectiveWrap', { static: true }) private readonly perspectiveWrap!: ElementRef<HTMLElement>;
+  private readonly zone = inject(NgZone);
+  private visibilityObserver?: IntersectionObserver;
+  private motionPreference?: MediaQueryList;
+  private pointerPreference?: MediaQueryList;
+  private inView = true;
   private tiltFrameId?: number;
-  private tiltX = 0;
-  private tiltY = 0;
+  private pointerX = 0;
+  private pointerY = 0;
+  protected readonly headingWords = 'Your hiring day,'.split(' ');
+  protected readonly accentWords = 'moving in real time.'.split(' ');
 
-  protected onPointerMove(event: PointerEvent): void {
-    if (event.pointerType !== 'mouse' || !window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches) {
+  private readonly onPointerMove = (event: PointerEvent): void => {
+    if (event.pointerType !== 'mouse' || !this.pointerPreference?.matches) {
       this.resetTilt();
       return;
     }
 
-    const bounds = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    if (!bounds.width || !bounds.height) return;
-    const horizontal = Math.max(-1, Math.min(1, (event.clientX - bounds.left) / bounds.width * 2 - 1));
-    const vertical = Math.max(-1, Math.min(1, (event.clientY - bounds.top) / bounds.height * 2 - 1));
-    this.tiltX = -vertical * 4;
-    this.tiltY = horizontal * 5;
+    this.pointerX = event.clientX;
+    this.pointerY = event.clientY;
 
     if (this.tiltFrameId !== undefined) return;
     this.tiltFrameId = requestAnimationFrame(() => {
-      const surface = this.tiltSurface.nativeElement;
-      surface.style.setProperty('--pointer-tilt-x', `${this.tiltX.toFixed(2)}deg`);
-      surface.style.setProperty('--pointer-tilt-y', `${this.tiltY.toFixed(2)}deg`);
-      surface.style.setProperty('--pointer-light-x', `${(this.tiltY / 5 * 50 + 50).toFixed(2)}%`);
-      surface.style.setProperty('--pointer-light-y', `${(-this.tiltX / 4 * 50 + 50).toFixed(2)}%`);
-      surface.classList.add('has-pointer');
       this.tiltFrameId = undefined;
+      const bounds = this.perspectiveWrap.nativeElement.getBoundingClientRect();
+      if (!bounds.width || !bounds.height) return;
+      const horizontal = Math.max(-1, Math.min(1, (this.pointerX - bounds.left) / bounds.width * 2 - 1));
+      const vertical = Math.max(-1, Math.min(1, (this.pointerY - bounds.top) / bounds.height * 2 - 1));
+      const surface = this.tiltSurface.nativeElement;
+      surface.style.setProperty('--pointer-tilt-x', `${(-vertical * 1.5).toFixed(2)}deg`);
+      surface.style.setProperty('--pointer-tilt-y', `${(horizontal * 2).toFixed(2)}deg`);
+      surface.classList.add('has-pointer');
     });
-  }
+  };
 
-  protected resetTilt(): void {
+  private readonly resetTilt = (): void => {
     if (this.tiltFrameId !== undefined) cancelAnimationFrame(this.tiltFrameId);
     this.tiltFrameId = undefined;
     this.tiltSurface.nativeElement.style.removeProperty('--pointer-tilt-x');
     this.tiltSurface.nativeElement.style.removeProperty('--pointer-tilt-y');
     this.tiltSurface.nativeElement.classList.remove('has-pointer');
-  }
+  };
 
   ngAfterViewInit(): void {
-    this.updateProgress();
-  }
-
-  @HostListener('window:scroll')
-  @HostListener('window:resize')
-  queueUpdate(): void {
-    this.resetTilt();
-    if (this.frameId) return;
-    this.frameId = requestAnimationFrame(() => {
+    this.zone.runOutsideAngular(() => {
+      this.motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)');
+      this.pointerPreference = window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)');
+      this.motionPreference.addEventListener('change', this.queueUpdate);
+      window.addEventListener('scroll', this.queueUpdate, { passive: true });
+      window.addEventListener('resize', this.queueUpdate, { passive: true });
+      const wrap = this.perspectiveWrap.nativeElement;
+      wrap.addEventListener('pointermove', this.onPointerMove, { passive: true });
+      wrap.addEventListener('pointerleave', this.resetTilt);
+      wrap.addEventListener('pointercancel', this.resetTilt);
+      if (typeof IntersectionObserver !== 'undefined') {
+        this.visibilityObserver = new IntersectionObserver(([entry]) => {
+          this.inView = entry.isIntersecting;
+          this.scrollStage.nativeElement.classList.toggle('is-in-view', this.inView);
+          if (this.inView) this.queueUpdate();
+          else this.resetTilt();
+        });
+        this.visibilityObserver.observe(this.scrollStage.nativeElement);
+      }
       this.updateProgress();
-      this.frameId = undefined;
     });
   }
 
+  private readonly queueUpdate = (): void => {
+    if (!this.inView || this.frameId !== undefined) return;
+    this.frameId = requestAnimationFrame(() => {
+      if (this.tiltSurface.nativeElement.classList.contains('has-pointer')) this.resetTilt();
+      this.updateProgress();
+      this.frameId = undefined;
+    });
+  };
+
   ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.queueUpdate);
+    window.removeEventListener('resize', this.queueUpdate);
+    this.motionPreference?.removeEventListener('change', this.queueUpdate);
+    this.visibilityObserver?.disconnect();
+    const wrap = this.perspectiveWrap.nativeElement;
+    wrap.removeEventListener('pointermove', this.onPointerMove);
+    wrap.removeEventListener('pointerleave', this.resetTilt);
+    wrap.removeEventListener('pointercancel', this.resetTilt);
     if (this.frameId) cancelAnimationFrame(this.frameId);
     if (this.tiltFrameId !== undefined) cancelAnimationFrame(this.tiltFrameId);
   }
@@ -71,12 +104,14 @@ export class ScrollShowcase implements AfterViewInit, OnDestroy {
   private updateProgress(): void {
     const element = this.scrollStage.nativeElement;
     const bounds = element.getBoundingClientRect();
-    const distance = Math.max(element.offsetHeight - window.innerHeight, 1);
-    const progress = Math.min(Math.max(-bounds.top / distance, 0), 1);
+    // This section now flows normally; unfold the product as it enters the viewport.
+    const reducedMotion = this.motionPreference?.matches;
+    const distance = Math.max(window.innerHeight * .85, 1);
+    const progress = reducedMotion ? 1 : Math.min(Math.max((window.innerHeight - bounds.top) / distance, 0), 1);
     const isMobile = window.innerWidth <= 768;
-    const rotation = (isMobile ? 8 : 19) * (1 - progress);
-    const scale = isMobile ? 0.78 + progress * 0.2 : 1.055 - progress * 0.055;
-    const lift = progress * -72;
+    const rotation = (isMobile ? 0 : 10) * (1 - progress);
+    const scale = .975 + progress * .025;
+    const lift = (1 - progress) * 20;
 
     element.style.setProperty('--card-rotate', `${rotation.toFixed(2)}deg`);
     element.style.setProperty('--card-scale', scale.toFixed(3));

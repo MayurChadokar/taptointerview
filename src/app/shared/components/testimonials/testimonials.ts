@@ -1,13 +1,15 @@
 import { Component } from '@angular/core';
 import { RevealDirective } from '../../directives/reveal.directive';
+import { FeedbackTypingDirective } from '../../directives/feedback-typing.directive';
 
 @Component({
-  imports: [RevealDirective],
+  imports: [RevealDirective, FeedbackTypingDirective],
   selector: 'app-testimonials',
   templateUrl: './testimonials.html',
   styleUrl: './testimonials.scss',
 })
 export class Testimonials {
+  protected readonly employerFeedback = 'Hiring insulators was always a long, expensive process, mostly due to scheduling and no-shows. Tap To Interview lets my team fill roles fast.';
   protected readonly reasons = [
     {
       number: '01',
